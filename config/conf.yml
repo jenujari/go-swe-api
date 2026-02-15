@@ -1,0 +1,4 @@
+app:
+  name: swe-lib-api
+  port: 5678
+  debug: true
