@@ -24,33 +24,18 @@ jobs:
       with:
         go-version: '1.25.6'
 
-    - name: Install Podman
-      # You may pin to the exact commit or the version.
-      # uses: gacts/install-podman@96e73075ee4b6669429c80458d063924472fb04d
-      uses: gacts/install-podman@v1.1.1
+    - name: start docker
+      run: sudo systemctl start docker
 
-    - name: Setup Podman Compose
-      # You may pin to the exact commit or the version.
-      # uses: webgtx/setup-podman-compose@33a94a0af6c428f0fd97fe5de9ee8718ed518423
-      uses: webgtx/setup-podman-compose@v1
-
-    - name: more setup`
+    - name: prepare build
       run: |
-         sudo systemctl start podman.socket || true
-         sudo systemctl is-active podman.service
-         git reset --hard
-         git clean -fd
-          
-    - name: Build project
-      env:
-        DOCKER_BUILDKIT: 0
-        COMPOSE_DOCKER_CLI_BUILD: 1
-      run: make build-sweapi-test
-
+        git reset --hard
+        git clean -fd
+        docker build -f swe-builder.Dockerfile -t swe-builder:latest . 
+        docker run --rm -v .:/workspace -w /workspace docker.io/bufbuild/buf generate proto
+        docker compose -f compose.yaml build test_sweapi
+        
     - name: Run Test
-      env:
-        DOCKER_BUILDKIT: 0
-        COMPOSE_DOCKER_CLI_BUILD: 1
-      run: make sweapi-test
+      run: docker compose -f compose.yaml  run --rm test_sweapi -run -v
     
           
