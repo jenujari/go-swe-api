@@ -1,7 +1,7 @@
 # This workflow will build a golang project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
 
-name: Go
+name: Test with docker image
 
 on:
   push:
@@ -28,6 +28,12 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: gacts/install-podman@96e73075ee4b6669429c80458d063924472fb04d
       uses: gacts/install-podman@v1.1.1
+
+    - name: Setup Podman Compose
+      # You may pin to the exact commit or the version.
+      # uses: webgtx/setup-podman-compose@33a94a0af6c428f0fd97fe5de9ee8718ed518423
+      uses: webgtx/setup-podman-compose@v1
+          
 
     - name: Build project
       run: make build-sweapi-test
