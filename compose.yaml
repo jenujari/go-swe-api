@@ -1,14 +1,16 @@
 services:
   test_sweapi:
+    image: test_sweapi:latest
     build:
       dockerfile: ./test.Dockerfile
-      args:
-        - GH_USER=${GH_USER}
-        - GH_TOKEN=${GH_TOKEN}
+      # args:
+      #   - GH_USER=${GH_USER}
+      #   - GH_TOKEN=${GH_TOKEN}
     volumes:
       - ./:/test_sweisseph
     working_dir: /test_sweisseph
   sweapi:
+    image: swegrpc:latest
     build:
       dockerfile: ./Dockerfile
     ports:

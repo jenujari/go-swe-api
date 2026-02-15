@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -39,14 +38,14 @@ func Test_LongDiff(T *testing.T) {
 }
 
 func Test_FindConjunctionRange(T *testing.T) {
-	t1 := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
+	t1 := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC).UTC()
+	t2 := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(24 * time.Hour * 60)).UTC()
 	expectedStartT := time.Date(2026, 1, 20, 4, 0, 0, 0, time.UTC)
 	expectedEndT := time.Date(2026, 1, 23, 3, 0, 0, 0, time.UTC)
 
-	startT, endT, inConj := FindConjunctionRange(t1, t1.Add(time.Duration(24*time.Hour*30)), 1, 1.0/24.0, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
-	fmt.Println("Start time : ", startT)
-	fmt.Println("End time : ", endT)
+	startT, endT, inConj, err := FindConjunctionRange(t1, t2, 1, 1.0/24.0, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
 
+	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.True(T, inConj, "Expected conjunction to be found")
 	assert.Equal(T, expectedStartT, startT, "Expected start time %v, got %v", expectedStartT, startT)
 	assert.Equal(T, expectedEndT, endT, "Expected end time %v, got %v", expectedEndT, endT)

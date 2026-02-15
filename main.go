@@ -2,7 +2,7 @@ package main
 
 import (
 	config "github.com/jenujari/go-swe-api/config"
-	router "github.com/jenujari/go-swe-api/router"
+	"github.com/jenujari/go-swe-api/grpc"
 	rtc "github.com/jenujari/runtime-context"
 )
 
@@ -15,9 +15,7 @@ func init() {
 func main() {
 	masterProcess = rtc.GetMainProcess()
 
-	srv := router.GetServer()
-	masterProcess.Run(router.RunServer)
-	config.GetLogger().Println("Server is running at", srv.Addr)
+	masterProcess.Run(grpc.RunGRPCServer)
 
 	masterProcess.WaitForFinish()
 }
