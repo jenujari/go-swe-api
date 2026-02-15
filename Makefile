@@ -12,13 +12,20 @@ proto-gen:
 	echo "Generated proto code"
 
 build-sweapi-test: build-swe-base proto-gen
-	podman compose -f compose.dev.yaml build test_sweapi 
+	podman compose -f compose.yaml build test_sweapi
 	echo "Built test_sweapi image"
-
 
 
 # make sweapi-test TEST=PosHandler
 sweapi-test:
 	echo "Running test $(TEST)"
-	podman compose -f compose.dev.yaml  run --rm test_sweapi -run $(TEST) -v 
+	podman compose -f compose.yaml  run --rm test_sweapi -run $(TEST) -v
 	echo "Test $(TEST) completed"
+
+
+sweapi:
+	podman compose -f compose.yaml up -d sweapi
+
+
+grpc-ui:
+	podman run --network=host -p 8080:8080 docker.io/fullstorydev/grpcui -plaintext localhost:5678

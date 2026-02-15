@@ -32,6 +32,8 @@ func GetVersion() string {
 	sweVer := make([]byte, 16)
 	swelib.Version(sweVer)
 
+	sweVer = bytes.Trim(sweVer, "\x00")
+
 	return string(sweVer)
 }
 
