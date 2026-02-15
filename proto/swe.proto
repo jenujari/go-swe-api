@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package swe;
+
+option go_package = "github.com/jenujari/go-swe-api/proto";
+
+service SWEService {
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc GetPos(PosRequest) returns (PosResponse);
+  rpc FindConjunction(ConjunctionRequest) returns (ConjunctionResponse);
+}
+
+message PingRequest {}
+
+message PingResponse {
+  string status = 1;
+  string timestamp = 2;
+  string version = 3;
+}
+
+message PosRequest {
+  string time = 1;
+  string planet_name = 2;
+}
+
+message DMS {
+  bool is_negative = 1;
+  int32 d = 2;
+  int32 m = 3;
+  float s = 4;
+}
+
+message NakshatraPada {
+  string name = 1;
+  int32 pada = 2;
+}
+
+message PlanetCord {
+  double longitude = 1;
+  double latitude = 2;
+  double distance = 3;
+  double speed_long = 4;
+  double speed_lat = 5;
+  double speed_dist = 6;
+  DMS longitude_dms = 7;
+  DMS latitude_dms = 8;
+  DMS speed_long_dms = 9;
+  string sign = 10;
+  NakshatraPada nakshatra = 11;
+}
+
+message PosResponse {
+  map<string, PlanetCord> results = 1;
+}
+
+message ConjunctionRequest {
+  string start = 1;
+  string end = 2;
+  string planet1 = 3;
+  string planet2 = 4;
+  int32 orb = 5;
+  double step = 6;
+}
+
+message ConjunctionResponse {
+  string start = 1;
+  string end = 2;
+}

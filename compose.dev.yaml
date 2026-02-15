@@ -2,9 +2,9 @@ services:
   test_sweapi:
     build:
       dockerfile: ./test.Dockerfile
-      args:
-        - GH_USER=${GH_USER}
-        - GH_TOKEN=${GH_TOKEN}
+      # args:
+      #   - GH_USER=${GH_USER}
+      #   - GH_TOKEN=${GH_TOKEN}
     volumes:
       - ./:/test_sweisseph
     working_dir: /test_sweisseph

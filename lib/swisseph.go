@@ -3,7 +3,6 @@ package lib
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"time"
@@ -23,14 +22,14 @@ var (
 func init() {
 	InitSwelib()
 
-	sweVer := make([]byte, 12)
+	sweVer := make([]byte, 16)
 	swelib.Version(sweVer)
 
 	fmt.Printf("Library used: Swiss Ephemeris v%s\n", string(bytes.Trim(sweVer, "\x00")))
 }
 
 func GetVersion() string {
-	sweVer := make([]byte, 12)
+	sweVer := make([]byte, 16)
 	swelib.Version(sweVer)
 
 	return string(sweVer)
@@ -43,18 +42,18 @@ func InitSwelib() {
 }
 
 func setEphePath() {
-	SWISSEPH_PATH := os.Getenv("SWISSEPH_PATH")
+	SWISSEPH_PATH = os.Getenv("SWISSEPH_PATH")
 
 	if SWISSEPH_PATH == "" {
 		SWISSEPH_PATH = "/usr/local/lib/ephe"
-		log.Println("SWISSEPH_PATH not set, using default path:", SWISSEPH_PATH)
 	}
 
-	swelib.SetEphePath([]byte(SWISSEPH_PATH))
+	// log.Println("Setting SWISSEPH_PATH:", SWISSEPH_PATH)
+	swelib.SetEphePath([]byte(SWISSEPH_PATH + "\x00"))
 }
 
 func setSidMode() {
-	// swelib.SetSidMode(swelib.SeSidmKrishnamurti, 0, 0)
+	setEphePath()
 	swelib.SetSidMode(swelib.SeSidmLahiri, 0, 0)
 }
 
@@ -63,7 +62,6 @@ func SweClear() {
 }
 
 func LongDiff(jd float64, p1, p2 int) (float64, error) {
-	defer SweClear()
 
 	var a = make([]float64, 6)
 	var b = make([]float64, 6)
@@ -75,12 +73,8 @@ func LongDiff(jd float64, p1, p2 int) (float64, error) {
 
 	serr1 = bytes.Trim(serr1, "\x00")
 	errStr := string(serr1)
-	if len(errStr) > 0 {
-		return 0, fmt.Errorf("error calculating planet position: %s", errStr)
-	}
-
 	if ret < 0 {
-		return 0, fmt.Errorf("error calculating planet position: %d", ret)
+		return 0, fmt.Errorf("error calculating planet position: %s", errStr)
 	}
 
 	setSidMode()
@@ -88,12 +82,8 @@ func LongDiff(jd float64, p1, p2 int) (float64, error) {
 
 	serr2 = bytes.Trim(serr2, "\x00")
 	errStr = string(serr2)
-	if len(errStr) > 0 {
-		return 0, fmt.Errorf("error calculating planet position: %s", errStr)
-	}
-
 	if ret < 0 {
-		return 0, fmt.Errorf("error calculating planet position: %d", ret)
+		return 0, fmt.Errorf("error calculating planet position: %s", errStr)
 	}
 
 	d := math.Abs(a[0] - b[0])
@@ -104,9 +94,7 @@ func LongDiff(jd float64, p1, p2 int) (float64, error) {
 	return d, nil
 }
 
-func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float64, p1, p2 int) (time.Time, time.Time, bool) {
-	// orbDeg := 1.0          // conjunction orb in degrees
-	// stepDays := 1.0 / 24.0 // 1 hour step
+func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float64, p1, p2 int) (time.Time, time.Time, bool, error) {
 	inConj := false
 	var startJD, endJD float64
 	var emptyTime time.Time
@@ -117,7 +105,7 @@ func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float6
 	for jd := jdStart; jd <= jdEnd; jd += stepDays {
 		diff, er := LongDiff(jd, p1, p2)
 		if er != nil {
-			return emptyTime, emptyTime, false
+			return emptyTime, emptyTime, false, er
 		}
 		if diff <= conjDeg {
 			if !inConj {
@@ -126,20 +114,29 @@ func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float6
 			}
 			endJD = jd
 		} else if inConj {
-			retStart, _ := SiderealTimeToUTC(startJD)
-			retEnd, _ := SiderealTimeToUTC(endJD)
-			return retStart, retEnd, true
+
+			retStart, errStart := SiderealTimeToUTC(startJD)
+			retEnd, errEnd := SiderealTimeToUTC(endJD)
+
+			if errStart != nil {
+				return emptyTime, emptyTime, false, errStart
+			}
+
+			if errEnd != nil {
+				return emptyTime, emptyTime, false, errEnd
+			}
+
+			return retStart, retEnd, true, nil
 		}
 	}
 
-	return emptyTime, emptyTime, false
+	return emptyTime, emptyTime, false, nil
 }
 
 func UTCToSiderealTime(utcTime time.Time) (float64, error) {
-	defer SweClear()
 
 	var jd float64
-	var tjdArr = make([]float64, 1)
+	var tjdArr = make([]float64, 2)
 	var serr = make([]byte, 1000)
 
 	y, m, d := utcTime.Year(), int(utcTime.Month()), utcTime.Day()
@@ -160,7 +157,6 @@ func UTCToSiderealTime(utcTime time.Time) (float64, error) {
 }
 
 func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
-	defer SweClear()
 
 	yArr := make([]int, 1)
 	mArr := make([]int, 1)
@@ -199,7 +195,6 @@ func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
 }
 
 func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetCord, error) {
-	defer SweClear()
 	var xp = make([]float64, 6)
 	var serr = make([]byte, 1000)
 	var isKetu bool = false
@@ -215,12 +210,8 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 
 	serr = bytes.Trim(serr, "\x00")
 	errStr := string(serr)
-	if len(errStr) > 0 {
-		return nil, fmt.Errorf("error calculating planet position: %s", errStr)
-	}
-
 	if ret < 0 {
-		return nil, fmt.Errorf("error calculating planet position: %d", ret)
+		return nil, fmt.Errorf("error calculating planet position: %s", errStr)
 	}
 
 	// Ensure all requested flag bits are present in the returned flags.
