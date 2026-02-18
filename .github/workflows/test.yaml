@@ -36,6 +36,6 @@ jobs:
         docker compose -f compose.yaml build test_sweapi
         
     - name: Run Test
-      run: docker compose -f compose.yaml  run --rm test_sweapi -run -v
+      run: docker compose -f compose.yaml run --rm test_sweapi
     
           

@@ -27,4 +27,4 @@ COPY . .
 # Generate proto code before testing
 RUN protoc -Iproto --go_out=proto --go_opt=paths=source_relative --go-grpc_out=proto --go-grpc_opt=paths=source_relative proto/swe.proto
 
-ENTRYPOINT ["go", "test", "./..."]
+ENTRYPOINT ["go", "test", "./..." , "-v"]
