@@ -19,11 +19,15 @@ build-sweapi-test: build-swe-base proto-gen
 # make sweapi-test TEST=PosHandler
 sweapi-test:
 	echo "Running test $(TEST)"
-	podman compose -f compose.yaml  run --rm test_sweapi -run $(TEST) -v
+	podman compose -f compose.yaml  run --rm test_sweapi -run $(TEST)
 	echo "Test $(TEST) completed"
 
 
-sweapi:
+build-sweapi: proto-gen
+	podman compose -f compose.yaml build sweapi
+	echo "Built sweapi image"
+
+sweapi: build-sweapi
 	podman compose -f compose.yaml up -d sweapi
 
 

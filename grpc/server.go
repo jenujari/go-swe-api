@@ -10,7 +10,7 @@ import (
 )
 
 type Server struct {
-	pb.UnimplementedSWEServiceServer
+	pb.UnimplementedEphServiceServer
 }
 
 func (s *Server) Ping(ctx context.Context, req *pb.PingRequest) (*pb.PingResponse, error) {
@@ -40,6 +40,7 @@ func (s *Server) GetPos(ctx context.Context, req *pb.PosRequest) (*pb.PosRespons
 			if err != nil {
 				return nil, err
 			}
+			planetCord.CalculateDerivedValues()
 			results[planet] = mapToProtoPlanetCord(planetCord)
 		}
 	} else {
@@ -47,6 +48,7 @@ func (s *Server) GetPos(ctx context.Context, req *pb.PosRequest) (*pb.PosRespons
 		if err != nil {
 			return nil, err
 		}
+		planetCord.CalculateDerivedValues()
 		results[req.PlanetName] = mapToProtoPlanetCord(planetCord)
 	}
 
@@ -118,5 +120,6 @@ func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 			Name: pc.Nakshatra.Name,
 			Pada: int32(pc.Nakshatra.Pada),
 		},
+		IsRetro: pc.IsRetro,
 	}
 }

@@ -19,177 +19,177 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SWEService_Ping_FullMethodName            = "/swe.SWEService/Ping"
-	SWEService_GetPos_FullMethodName          = "/swe.SWEService/GetPos"
-	SWEService_FindConjunction_FullMethodName = "/swe.SWEService/FindConjunction"
+	EphService_Ping_FullMethodName            = "/swe.EphService/Ping"
+	EphService_GetPos_FullMethodName          = "/swe.EphService/GetPos"
+	EphService_FindConjunction_FullMethodName = "/swe.EphService/FindConjunction"
 )
 
-// SWEServiceClient is the client API for SWEService service.
+// EphServiceClient is the client API for EphService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type SWEServiceClient interface {
+type EphServiceClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	GetPos(ctx context.Context, in *PosRequest, opts ...grpc.CallOption) (*PosResponse, error)
 	FindConjunction(ctx context.Context, in *ConjunctionRequest, opts ...grpc.CallOption) (*ConjunctionResponse, error)
 }
 
-type sWEServiceClient struct {
+type ephServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewSWEServiceClient(cc grpc.ClientConnInterface) SWEServiceClient {
-	return &sWEServiceClient{cc}
+func NewEphServiceClient(cc grpc.ClientConnInterface) EphServiceClient {
+	return &ephServiceClient{cc}
 }
 
-func (c *sWEServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
+func (c *ephServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, SWEService_Ping_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EphService_Ping_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *sWEServiceClient) GetPos(ctx context.Context, in *PosRequest, opts ...grpc.CallOption) (*PosResponse, error) {
+func (c *ephServiceClient) GetPos(ctx context.Context, in *PosRequest, opts ...grpc.CallOption) (*PosResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PosResponse)
-	err := c.cc.Invoke(ctx, SWEService_GetPos_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EphService_GetPos_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *sWEServiceClient) FindConjunction(ctx context.Context, in *ConjunctionRequest, opts ...grpc.CallOption) (*ConjunctionResponse, error) {
+func (c *ephServiceClient) FindConjunction(ctx context.Context, in *ConjunctionRequest, opts ...grpc.CallOption) (*ConjunctionResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ConjunctionResponse)
-	err := c.cc.Invoke(ctx, SWEService_FindConjunction_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EphService_FindConjunction_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// SWEServiceServer is the server API for SWEService service.
-// All implementations must embed UnimplementedSWEServiceServer
+// EphServiceServer is the server API for EphService service.
+// All implementations must embed UnimplementedEphServiceServer
 // for forward compatibility.
-type SWEServiceServer interface {
+type EphServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	GetPos(context.Context, *PosRequest) (*PosResponse, error)
 	FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error)
-	mustEmbedUnimplementedSWEServiceServer()
+	mustEmbedUnimplementedEphServiceServer()
 }
 
-// UnimplementedSWEServiceServer must be embedded to have
+// UnimplementedEphServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedSWEServiceServer struct{}
+type UnimplementedEphServiceServer struct{}
 
-func (UnimplementedSWEServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
+func (UnimplementedEphServiceServer) Ping(context.Context, *PingRequest) (*PingResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Ping not implemented")
 }
-func (UnimplementedSWEServiceServer) GetPos(context.Context, *PosRequest) (*PosResponse, error) {
+func (UnimplementedEphServiceServer) GetPos(context.Context, *PosRequest) (*PosResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetPos not implemented")
 }
-func (UnimplementedSWEServiceServer) FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error) {
+func (UnimplementedEphServiceServer) FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method FindConjunction not implemented")
 }
-func (UnimplementedSWEServiceServer) mustEmbedUnimplementedSWEServiceServer() {}
-func (UnimplementedSWEServiceServer) testEmbeddedByValue()                    {}
+func (UnimplementedEphServiceServer) mustEmbedUnimplementedEphServiceServer() {}
+func (UnimplementedEphServiceServer) testEmbeddedByValue()                    {}
 
-// UnsafeSWEServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to SWEServiceServer will
+// UnsafeEphServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to EphServiceServer will
 // result in compilation errors.
-type UnsafeSWEServiceServer interface {
-	mustEmbedUnimplementedSWEServiceServer()
+type UnsafeEphServiceServer interface {
+	mustEmbedUnimplementedEphServiceServer()
 }
 
-func RegisterSWEServiceServer(s grpc.ServiceRegistrar, srv SWEServiceServer) {
-	// If the following call panics, it indicates UnimplementedSWEServiceServer was
+func RegisterEphServiceServer(s grpc.ServiceRegistrar, srv EphServiceServer) {
+	// If the following call panics, it indicates UnimplementedEphServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&SWEService_ServiceDesc, srv)
+	s.RegisterService(&EphService_ServiceDesc, srv)
 }
 
-func _SWEService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EphService_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SWEServiceServer).Ping(ctx, in)
+		return srv.(EphServiceServer).Ping(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SWEService_Ping_FullMethodName,
+		FullMethod: EphService_Ping_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SWEServiceServer).Ping(ctx, req.(*PingRequest))
+		return srv.(EphServiceServer).Ping(ctx, req.(*PingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SWEService_GetPos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EphService_GetPos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PosRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SWEServiceServer).GetPos(ctx, in)
+		return srv.(EphServiceServer).GetPos(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SWEService_GetPos_FullMethodName,
+		FullMethod: EphService_GetPos_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SWEServiceServer).GetPos(ctx, req.(*PosRequest))
+		return srv.(EphServiceServer).GetPos(ctx, req.(*PosRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SWEService_FindConjunction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EphService_FindConjunction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ConjunctionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SWEServiceServer).FindConjunction(ctx, in)
+		return srv.(EphServiceServer).FindConjunction(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: SWEService_FindConjunction_FullMethodName,
+		FullMethod: EphService_FindConjunction_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SWEServiceServer).FindConjunction(ctx, req.(*ConjunctionRequest))
+		return srv.(EphServiceServer).FindConjunction(ctx, req.(*ConjunctionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// SWEService_ServiceDesc is the grpc.ServiceDesc for SWEService service.
+// EphService_ServiceDesc is the grpc.ServiceDesc for EphService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var SWEService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "swe.SWEService",
-	HandlerType: (*SWEServiceServer)(nil),
+var EphService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "swe.EphService",
+	HandlerType: (*EphServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Ping",
-			Handler:    _SWEService_Ping_Handler,
+			Handler:    _EphService_Ping_Handler,
 		},
 		{
 			MethodName: "GetPos",
-			Handler:    _SWEService_GetPos_Handler,
+			Handler:    _EphService_GetPos_Handler,
 		},
 		{
 			MethodName: "FindConjunction",
-			Handler:    _SWEService_FindConjunction_Handler,
+			Handler:    _EphService_FindConjunction_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -21,7 +21,7 @@ var lis *bufconn.Listener
 func initTestGRPC() {
 	lis = bufconn.Listen(bufSize)
 	s := googlegrpc.NewServer()
-	pb.RegisterSWEServiceServer(s, &grpc.Server{})
+	pb.RegisterEphServiceServer(s, &grpc.Server{})
 	go func() {
 		if err := s.Serve(lis); err != nil {
 			panic(err)
@@ -33,7 +33,7 @@ func bufDialer(context.Context, string) (net.Conn, error) {
 	return lis.Dial()
 }
 
-func TestSWEClient(t *testing.T) {
+func TestEphServiceClient(t *testing.T) {
 
 	// Optionally set a mock config
 	config.SetConfig(&config.Config{
@@ -51,20 +51,20 @@ func TestSWEClient(t *testing.T) {
 	initTestGRPC()
 	ctx := context.Background()
 
-	// Create client using the new SWEClient wrapper
+	// Create client using the new EphServiceClient wrapper
 	// We use DialContext with bufDialer to test against the in-memory server
 	opts := []googlegrpc.DialOption{
 		googlegrpc.WithContextDialer(bufDialer),
 		googlegrpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
-	conn, err := googlegrpc.DialContext(ctx, "bufnet", opts...)
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", opts...)
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
 
-	client := &SWEClient{
+	client := &EphServiceClient{
 		conn:   conn,
-		client: pb.NewSWEServiceClient(conn),
+		client: pb.NewEphServiceClient(conn),
 	}
 	defer client.Close()
 

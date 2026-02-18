@@ -302,6 +302,7 @@ type PlanetCord struct {
 	SpeedLongDms  *DMS                   `protobuf:"bytes,9,opt,name=speed_long_dms,json=speedLongDms,proto3" json:"speed_long_dms,omitempty"`
 	Sign          string                 `protobuf:"bytes,10,opt,name=sign,proto3" json:"sign,omitempty"`
 	Nakshatra     *NakshatraPada         `protobuf:"bytes,11,opt,name=nakshatra,proto3" json:"nakshatra,omitempty"`
+	IsRetro       bool                   `protobuf:"varint,12,opt,name=is_retro,json=isRetro,proto3" json:"is_retro,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -411,6 +412,13 @@ func (x *PlanetCord) GetNakshatra() *NakshatraPada {
 		return x.Nakshatra
 	}
 	return nil
+}
+
+func (x *PlanetCord) GetIsRetro() bool {
+	if x != nil {
+		return x.IsRetro
+	}
+	return false
 }
 
 type PosResponse struct {
@@ -616,7 +624,7 @@ const file_swe_proto_rawDesc = "" +
 	"\x01s\x18\x04 \x01(\x02R\x01s\"7\n" +
 	"\rNakshatraPada\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\x8f\x03\n" +
+	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\xaa\x03\n" +
 	"\n" +
 	"PlanetCord\x12\x1c\n" +
 	"\tlongitude\x18\x01 \x01(\x01R\tlongitude\x12\x1a\n" +
@@ -632,7 +640,8 @@ const file_swe_proto_rawDesc = "" +
 	"\x0espeed_long_dms\x18\t \x01(\v2\b.swe.DMSR\fspeedLongDms\x12\x12\n" +
 	"\x04sign\x18\n" +
 	" \x01(\tR\x04sign\x120\n" +
-	"\tnakshatra\x18\v \x01(\v2\x12.swe.NakshatraPadaR\tnakshatra\"\x93\x01\n" +
+	"\tnakshatra\x18\v \x01(\v2\x12.swe.NakshatraPadaR\tnakshatra\x12\x19\n" +
+	"\bis_retro\x18\f \x01(\bR\aisRetro\"\x93\x01\n" +
 	"\vPosResponse\x127\n" +
 	"\aresults\x18\x01 \x03(\v2\x1d.swe.PosResponse.ResultsEntryR\aresults\x1aK\n" +
 	"\fResultsEntry\x12\x10\n" +
@@ -649,7 +658,7 @@ const file_swe_proto_rawDesc = "" +
 	"\x05start\x18\x01 \x01(\tR\x05start\x12\x10\n" +
 	"\x03end\x18\x02 \x01(\tR\x03end2\xac\x01\n" +
 	"\n" +
-	"SWEService\x12+\n" +
+	"EphService\x12+\n" +
 	"\x04Ping\x12\x10.swe.PingRequest\x1a\x11.swe.PingResponse\x12+\n" +
 	"\x06GetPos\x12\x0f.swe.PosRequest\x1a\x10.swe.PosResponse\x12D\n" +
 	"\x0fFindConjunction\x12\x17.swe.ConjunctionRequest\x1a\x18.swe.ConjunctionResponseBe\n" +
@@ -687,12 +696,12 @@ var file_swe_proto_depIdxs = []int32{
 	4, // 3: swe.PlanetCord.nakshatra:type_name -> swe.NakshatraPada
 	9, // 4: swe.PosResponse.results:type_name -> swe.PosResponse.ResultsEntry
 	5, // 5: swe.PosResponse.ResultsEntry.value:type_name -> swe.PlanetCord
-	0, // 6: swe.SWEService.Ping:input_type -> swe.PingRequest
-	2, // 7: swe.SWEService.GetPos:input_type -> swe.PosRequest
-	7, // 8: swe.SWEService.FindConjunction:input_type -> swe.ConjunctionRequest
-	1, // 9: swe.SWEService.Ping:output_type -> swe.PingResponse
-	6, // 10: swe.SWEService.GetPos:output_type -> swe.PosResponse
-	8, // 11: swe.SWEService.FindConjunction:output_type -> swe.ConjunctionResponse
+	0, // 6: swe.EphService.Ping:input_type -> swe.PingRequest
+	2, // 7: swe.EphService.GetPos:input_type -> swe.PosRequest
+	7, // 8: swe.EphService.FindConjunction:input_type -> swe.ConjunctionRequest
+	1, // 9: swe.EphService.Ping:output_type -> swe.PingResponse
+	6, // 10: swe.EphService.GetPos:output_type -> swe.PosResponse
+	8, // 11: swe.EphService.FindConjunction:output_type -> swe.ConjunctionResponse
 	9, // [9:12] is the sub-list for method output_type
 	6, // [6:9] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name
