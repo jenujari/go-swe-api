@@ -20,7 +20,7 @@ var lis *bufconn.Listener
 func initTestGRPC() {
 	lis = bufconn.Listen(bufSize)
 	s := googlegrpc.NewServer()
-	pb.RegisterSWEServiceServer(s, &grpc.Server{})
+	pb.RegisterEphServiceServer(s, &grpc.Server{})
 	go func() {
 		if err := s.Serve(lis); err != nil {
 			panic(err)
@@ -35,12 +35,12 @@ func bufDialer(context.Context, string) (net.Conn, error) {
 func TestGRPC_Ping(t *testing.T) {
 	initTestGRPC()
 	ctx := context.Background()
-	conn, err := googlegrpc.DialContext(ctx, "bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := googlegrpc.NewClient("bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
 	defer conn.Close()
-	client := pb.NewSWEServiceClient(conn)
+	client := pb.NewEphServiceClient(conn)
 	resp, err := client.Ping(ctx, &pb.PingRequest{})
 	if err != nil {
 		t.Fatalf("Ping failed: %v", err)
@@ -51,12 +51,12 @@ func TestGRPC_Ping(t *testing.T) {
 func TestGRPC_GetPos(t *testing.T) {
 	// initTestGRPC() // Already initialized if running all tests, but better safe.
 	ctx := context.Background()
-	conn, err := googlegrpc.DialContext(ctx, "bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := googlegrpc.NewClient("bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
 	defer conn.Close()
-	client := pb.NewSWEServiceClient(conn)
+	client := pb.NewEphServiceClient(conn)
 	resp, err := client.GetPos(ctx, &pb.PosRequest{
 		Time:       "2026-01-26T00:00:00Z",
 		PlanetName: "Sun",

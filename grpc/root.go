@@ -17,7 +17,7 @@ var (
 
 func init() {
 	grpcServer = grpc.NewServer()
-	pb.RegisterSWEServiceServer(grpcServer, &Server{})
+	pb.RegisterEphServiceServer(grpcServer, &Server{})
 	reflection.Register(grpcServer)
 }
 
