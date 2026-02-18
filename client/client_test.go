@@ -5,6 +5,7 @@ import (
 	"net"
 	"testing"
 
+	"github.com/jenujari/go-swe-api/config"
 	"github.com/jenujari/go-swe-api/grpc"
 	pb "github.com/jenujari/go-swe-api/proto"
 	"github.com/stretchr/testify/assert"
@@ -33,6 +34,20 @@ func bufDialer(context.Context, string) (net.Conn, error) {
 }
 
 func TestSWEClient(t *testing.T) {
+
+	// Optionally set a mock config
+	config.SetConfig(&config.Config{
+		App: struct {
+			Name  string `mapstructure:"name"`
+			Port  int    `mapstructure:"port"`
+			Debug bool   `mapstructure:"debug"`
+		}{
+			Name:  "test-app",
+			Port:  5678,
+			Debug: true,
+		},
+	})
+
 	initTestGRPC()
 	ctx := context.Background()
 

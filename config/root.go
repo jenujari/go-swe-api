@@ -19,11 +19,22 @@ func init() {
 	viper.SetConfigType("yaml") // Config file type
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./config")
+	viper.AddConfigPath("../config")
+	viper.AddConfigPath("../../config")
+
+	// // Set defaults
+	// viper.SetDefault("app.name", "swe-lib-api")
+	// viper.SetDefault("app.port", 5678)
+	// viper.SetDefault("app.debug", true)
 
 	// Read the config file
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatalf("Error reading config file: %v", err)
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			log.Printf("Warning: Config file not found, using default values: %v", err)
+		} else {
+			log.Fatalf("Error reading config file: %v", err)
+		}
 	}
 
 	// Initialize variables by unmarshaling into the struct
@@ -55,4 +66,8 @@ func GetLogger() *log.Logger {
 
 func GetConfig() *Config {
 	return config
+}
+
+func SetConfig(cfg *Config) {
+	config = cfg
 }
