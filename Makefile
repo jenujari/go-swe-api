@@ -23,7 +23,11 @@ sweapi-test:
 	echo "Test $(TEST) completed"
 
 
-sweapi:
+build-sweapi: proto-gen
+	podman compose -f compose.yaml build sweapi
+	echo "Built sweapi image"
+
+sweapi: build-sweapi
 	podman compose -f compose.yaml up -d sweapi
 
 

@@ -57,7 +57,7 @@ func TestEphServiceClient(t *testing.T) {
 		googlegrpc.WithContextDialer(bufDialer),
 		googlegrpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
-	conn, err := googlegrpc.NewClient("bufnet", opts...)
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", opts...)
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}

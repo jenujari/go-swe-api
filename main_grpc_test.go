@@ -35,7 +35,7 @@ func bufDialer(context.Context, string) (net.Conn, error) {
 func TestGRPC_Ping(t *testing.T) {
 	initTestGRPC()
 	ctx := context.Background()
-	conn, err := googlegrpc.NewClient("bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
@@ -51,7 +51,7 @@ func TestGRPC_Ping(t *testing.T) {
 func TestGRPC_GetPos(t *testing.T) {
 	// initTestGRPC() // Already initialized if running all tests, but better safe.
 	ctx := context.Background()
-	conn, err := googlegrpc.NewClient("bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
