@@ -32,4 +32,4 @@ sweapi: build-sweapi
 
 
 grpc-ui:
-	podman run --network=host -p 8080:8080 docker.io/fullstorydev/grpcui -plaintext localhost:5678
+	podman run --rm --network=host -p 8080:8080 docker.io/fullstorydev/grpcui -plaintext localhost:5678
