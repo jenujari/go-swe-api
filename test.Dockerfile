@@ -7,8 +7,8 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 # Copy libs from prebuilt swe-builder image (build this image first)
-COPY --from=swe-builder:latest /usr/local/lib/libswe.so /usr/local/lib/libswe.so
-COPY --from=swe-builder:latest /usr/local/lib/ephe /usr/local/lib/ephe
+COPY --from=docker.io/jhon5456/sweph-build-base:v1 /usr/local/lib/libswe.so /usr/local/lib/libswe.so
+COPY --from=docker.io/jhon5456/sweph-build-base:v1 /usr/local/lib/ephe /usr/local/lib/ephe
 
 ENV SWISSEPH_PATH=/usr/local/lib/ephe
 ENV CGO_ENABLED=1

@@ -7,8 +7,9 @@ down:
 	@echo "Stopped and removed all containers"
 
 build-swe-base:
-	podman build -f swe-builder.Dockerfile -t swe-builder:latest . 
-	@echo "Built swe-builder image"
+	podman build -f swe-builder.Dockerfile -t docker.io/jhon5456/sweph-build-base:v1 .
+	podman push docker.io/jhon5456/sweph-build-base:v1
+	@echo "Built and pushed sweph-build-base image"
 
 # Generate proto code using podman and buf (cleaner and more reliable)
 proto-gen:
