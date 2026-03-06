@@ -89,6 +89,22 @@ func (s *Server) FindConjunction(ctx context.Context, req *pb.ConjunctionRequest
 	}, nil
 }
 
+func (s *Server) Tithy(ctx context.Context, req *pb.TithyRequest) (*pb.TithyResponse, error) {
+	timestamp, err := time.Parse(time.RFC3339, req.Timestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	tithy, err := lib.CalcTithy(timestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.TithyResponse{
+		Tithy: tithy,
+	}, nil
+}
+
 func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 	return &pb.PlanetCord{
 		Longitude: pc.Longitude,

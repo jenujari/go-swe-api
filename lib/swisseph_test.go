@@ -104,3 +104,23 @@ func Test_GetPlanetCalculation(T *testing.T) {
 		assert.InDelta(T, tc.expected.Latitude, result.Latitude, 0.01, "%s: Expected Latitude %f, got %f", name, tc.expected.Latitude, result.Latitude)
 	}
 }
+
+func Test_CalcTithy(T *testing.T) {
+	defer SweClear()
+
+	// Based on the same reference timestamp used in Test_GetPlanetCalculation:
+	// Moon ~= 222.80, Sun ~= 270.17 => delta ~= 312.63 => floor(312.63/12)+1 = 27
+	t1 := time.Date(2026, 1, 14, 13, 45, 30, 0, time.UTC)
+
+	tithy, err := CalcTithy(t1)
+
+	assert.NoError(T, err, "Expected no error, got %v", err)
+	assert.Equal(T, int32(27), tithy, "Expected Tithy %d, got %d", 27, tithy)
+
+	t2 := time.Date(2026, 3, 6, 6, 0, 0, 0, time.UTC)
+
+	tithy, err = CalcTithy(t2)
+
+	assert.NoError(T, err, "Expected no error, got %v", err)
+	assert.Equal(T, int32(18), tithy, "Expected Tithy %d, got %d", 18, tithy)
+}

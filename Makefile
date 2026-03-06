@@ -2,34 +2,37 @@ PHONY: all
 
 TEST ?= .
 
+down:
+	podman compose -f compose.yaml down --remove-orphans --volumes
+	@echo "Stopped and removed all containers"
+
 build-swe-base:
 	podman build -f swe-builder.Dockerfile -t swe-builder:latest . 
-	echo "Built swe-builder image"
+	@echo "Built swe-builder image"
 
 # Generate proto code using podman and buf (cleaner and more reliable)
 proto-gen:
 	podman run --rm -v .:/workspace -w /workspace docker.io/bufbuild/buf generate proto
-	echo "Generated proto code"
+	@echo "Generated proto code"
 
 build-sweapi-test: build-swe-base proto-gen
 	podman compose -f compose.yaml build test_sweapi
-	echo "Built test_sweapi image"
+	@echo "Built test_sweapi image"
 
 
 # make sweapi-test TEST=PosHandler
 sweapi-test:
-	echo "Running test $(TEST)"
+	@echo "Running test $(TEST)"
 	podman compose -f compose.yaml  run --rm test_sweapi -run $(TEST)
-	echo "Test $(TEST) completed"
+	@echo "Test $(TEST) completed"
 
 
 build-sweapi: proto-gen
 	podman compose -f compose.yaml build sweapi
-	echo "Built sweapi image"
+	@echo "Built sweapi image"
 
 sweapi: build-sweapi
 	podman compose -f compose.yaml up -d sweapi
-
 
 grpc-ui:
 	podman run --rm --network=host -p 8080:8080 docker.io/fullstorydev/grpcui -plaintext localhost:5678

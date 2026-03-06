@@ -61,3 +61,10 @@ func (c *EphServiceClient) FindConjunction(ctx context.Context, start, end, plan
 		Step:    step,
 	})
 }
+
+// Tithy returns the tithy value for a given RFC3339 timestamp.
+func (c *EphServiceClient) Tithy(ctx context.Context, timestamp string) (*pb.TithyResponse, error) {
+	return c.client.Tithy(ctx, &pb.TithyRequest{
+		Timestamp: timestamp,
+	})
+}

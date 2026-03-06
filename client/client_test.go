@@ -49,7 +49,6 @@ func TestEphServiceClient(t *testing.T) {
 	})
 
 	initTestGRPC()
-	ctx := context.Background()
 
 	// Create client using the new EphServiceClient wrapper
 	// We use DialContext with bufDialer to test against the in-memory server
@@ -69,15 +68,22 @@ func TestEphServiceClient(t *testing.T) {
 	defer client.Close()
 
 	t.Run("Ping", func(t *testing.T) {
-		resp, err := client.Ping(ctx)
+		resp, err := client.Ping(t.Context())
 		assert.NoError(t, err)
 		assert.Equal(t, "ok", resp.Status)
 	})
 
 	t.Run("GetPos", func(t *testing.T) {
-		resp, err := client.GetPos(ctx, "2026-01-26T00:00:00Z", "Sun")
+		resp, err := client.GetPos(t.Context(), "2026-01-26T00:00:00Z", "Sun")
 		assert.NoError(t, err)
 		assert.NotNil(t, resp)
 		assert.Contains(t, resp.Results, "Sun")
+	})
+
+	t.Run("Tithy", func(t *testing.T) {
+		resp, err := client.Tithy(t.Context(), "2026-01-14T13:45:30Z")
+		assert.NoError(t, err)
+		assert.NotNil(t, resp)
+		assert.Equal(t, int32(27), resp.Tithy)
 	})
 }

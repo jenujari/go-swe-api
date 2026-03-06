@@ -8,6 +8,7 @@ service EphService {
   rpc Ping(PingRequest) returns (PingResponse);
   rpc GetPos(PosRequest) returns (PosResponse);
   rpc FindConjunction(ConjunctionRequest) returns (ConjunctionResponse);
+  rpc Tithy(TithyRequest) returns (TithyResponse);
 }
 
 message PingRequest {}
@@ -66,4 +67,12 @@ message ConjunctionRequest {
 message ConjunctionResponse {
   string start = 1;
   string end   = 2;
+}
+
+message TithyRequest {
+  string timestamp = 1;
+}
+
+message TithyResponse {
+  int32 tithy = 1;
 }
