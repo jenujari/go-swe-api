@@ -63,6 +63,32 @@ func SweClear() {
 	swelib.Close()
 }
 
+func CalcTithy(timestamp time.Time) (int32, error) {
+
+	sidTime, err := UTCToSiderealTime(timestamp)
+
+	if err != nil {
+		return 0, err
+	}
+
+	sunCord, err := GetPlanetCalculation(sidTime, baselib.SUN)
+
+	if err != nil {
+		return 0, err
+	}
+
+	moonCord, err := GetPlanetCalculation(sidTime, baselib.MOON)
+
+	if err != nil {
+		return 0, err
+	}
+
+	tithy := baselib.CalcTithy(moonCord.Longitude, sunCord.Longitude)
+
+	return int32(tithy), nil
+
+}
+
 func LongDiff(jd float64, p1, p2 int) (float64, error) {
 
 	var a = make([]float64, 6)

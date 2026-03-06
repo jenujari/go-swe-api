@@ -601,6 +601,94 @@ func (x *ConjunctionResponse) GetEnd() string {
 	return ""
 }
 
+type TithyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp     string                 `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TithyRequest) Reset() {
+	*x = TithyRequest{}
+	mi := &file_swe_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TithyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TithyRequest) ProtoMessage() {}
+
+func (x *TithyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_swe_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TithyRequest.ProtoReflect.Descriptor instead.
+func (*TithyRequest) Descriptor() ([]byte, []int) {
+	return file_swe_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *TithyRequest) GetTimestamp() string {
+	if x != nil {
+		return x.Timestamp
+	}
+	return ""
+}
+
+type TithyResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tithy         int32                  `protobuf:"varint,1,opt,name=tithy,proto3" json:"tithy,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TithyResponse) Reset() {
+	*x = TithyResponse{}
+	mi := &file_swe_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TithyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TithyResponse) ProtoMessage() {}
+
+func (x *TithyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_swe_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TithyResponse.ProtoReflect.Descriptor instead.
+func (*TithyResponse) Descriptor() ([]byte, []int) {
+	return file_swe_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *TithyResponse) GetTithy() int32 {
+	if x != nil {
+		return x.Tithy
+	}
+	return 0
+}
+
 var File_swe_proto protoreflect.FileDescriptor
 
 const file_swe_proto_rawDesc = "" +
@@ -656,12 +744,17 @@ const file_swe_proto_rawDesc = "" +
 	"\x04step\x18\x06 \x01(\x01R\x04step\"=\n" +
 	"\x13ConjunctionResponse\x12\x14\n" +
 	"\x05start\x18\x01 \x01(\tR\x05start\x12\x10\n" +
-	"\x03end\x18\x02 \x01(\tR\x03end2\xac\x01\n" +
+	"\x03end\x18\x02 \x01(\tR\x03end\",\n" +
+	"\fTithyRequest\x12\x1c\n" +
+	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\"%\n" +
+	"\rTithyResponse\x12\x14\n" +
+	"\x05tithy\x18\x01 \x01(\x05R\x05tithy2\xdc\x01\n" +
 	"\n" +
 	"EphService\x12+\n" +
 	"\x04Ping\x12\x10.swe.PingRequest\x1a\x11.swe.PingResponse\x12+\n" +
 	"\x06GetPos\x12\x0f.swe.PosRequest\x1a\x10.swe.PosResponse\x12D\n" +
-	"\x0fFindConjunction\x12\x17.swe.ConjunctionRequest\x1a\x18.swe.ConjunctionResponseBe\n" +
+	"\x0fFindConjunction\x12\x17.swe.ConjunctionRequest\x1a\x18.swe.ConjunctionResponse\x12.\n" +
+	"\x05Tithy\x12\x11.swe.TithyRequest\x1a\x12.swe.TithyResponseBe\n" +
 	"\acom.sweB\bSweProtoP\x01Z$github.com/jenujari/go-swe-api/proto\xa2\x02\x03SXX\xaa\x02\x03Swe\xca\x02\x03Swe\xe2\x02\x0fSwe\\GPBMetadata\xea\x02\x03Sweb\x06proto3"
 
 var (
@@ -676,7 +769,7 @@ func file_swe_proto_rawDescGZIP() []byte {
 	return file_swe_proto_rawDescData
 }
 
-var file_swe_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_swe_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_swe_proto_goTypes = []any{
 	(*PingRequest)(nil),         // 0: swe.PingRequest
 	(*PingResponse)(nil),        // 1: swe.PingResponse
@@ -687,26 +780,30 @@ var file_swe_proto_goTypes = []any{
 	(*PosResponse)(nil),         // 6: swe.PosResponse
 	(*ConjunctionRequest)(nil),  // 7: swe.ConjunctionRequest
 	(*ConjunctionResponse)(nil), // 8: swe.ConjunctionResponse
-	nil,                         // 9: swe.PosResponse.ResultsEntry
+	(*TithyRequest)(nil),        // 9: swe.TithyRequest
+	(*TithyResponse)(nil),       // 10: swe.TithyResponse
+	nil,                         // 11: swe.PosResponse.ResultsEntry
 }
 var file_swe_proto_depIdxs = []int32{
-	3, // 0: swe.PlanetCord.longitude_dms:type_name -> swe.DMS
-	3, // 1: swe.PlanetCord.latitude_dms:type_name -> swe.DMS
-	3, // 2: swe.PlanetCord.speed_long_dms:type_name -> swe.DMS
-	4, // 3: swe.PlanetCord.nakshatra:type_name -> swe.NakshatraPada
-	9, // 4: swe.PosResponse.results:type_name -> swe.PosResponse.ResultsEntry
-	5, // 5: swe.PosResponse.ResultsEntry.value:type_name -> swe.PlanetCord
-	0, // 6: swe.EphService.Ping:input_type -> swe.PingRequest
-	2, // 7: swe.EphService.GetPos:input_type -> swe.PosRequest
-	7, // 8: swe.EphService.FindConjunction:input_type -> swe.ConjunctionRequest
-	1, // 9: swe.EphService.Ping:output_type -> swe.PingResponse
-	6, // 10: swe.EphService.GetPos:output_type -> swe.PosResponse
-	8, // 11: swe.EphService.FindConjunction:output_type -> swe.ConjunctionResponse
-	9, // [9:12] is the sub-list for method output_type
-	6, // [6:9] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	3,  // 0: swe.PlanetCord.longitude_dms:type_name -> swe.DMS
+	3,  // 1: swe.PlanetCord.latitude_dms:type_name -> swe.DMS
+	3,  // 2: swe.PlanetCord.speed_long_dms:type_name -> swe.DMS
+	4,  // 3: swe.PlanetCord.nakshatra:type_name -> swe.NakshatraPada
+	11, // 4: swe.PosResponse.results:type_name -> swe.PosResponse.ResultsEntry
+	5,  // 5: swe.PosResponse.ResultsEntry.value:type_name -> swe.PlanetCord
+	0,  // 6: swe.EphService.Ping:input_type -> swe.PingRequest
+	2,  // 7: swe.EphService.GetPos:input_type -> swe.PosRequest
+	7,  // 8: swe.EphService.FindConjunction:input_type -> swe.ConjunctionRequest
+	9,  // 9: swe.EphService.Tithy:input_type -> swe.TithyRequest
+	1,  // 10: swe.EphService.Ping:output_type -> swe.PingResponse
+	6,  // 11: swe.EphService.GetPos:output_type -> swe.PosResponse
+	8,  // 12: swe.EphService.FindConjunction:output_type -> swe.ConjunctionResponse
+	10, // 13: swe.EphService.Tithy:output_type -> swe.TithyResponse
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_swe_proto_init() }
@@ -720,7 +817,7 @@ func file_swe_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_swe_proto_rawDesc), len(file_swe_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -22,6 +22,7 @@ const (
 	EphService_Ping_FullMethodName            = "/swe.EphService/Ping"
 	EphService_GetPos_FullMethodName          = "/swe.EphService/GetPos"
 	EphService_FindConjunction_FullMethodName = "/swe.EphService/FindConjunction"
+	EphService_Tithy_FullMethodName           = "/swe.EphService/Tithy"
 )
 
 // EphServiceClient is the client API for EphService service.
@@ -31,6 +32,7 @@ type EphServiceClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
 	GetPos(ctx context.Context, in *PosRequest, opts ...grpc.CallOption) (*PosResponse, error)
 	FindConjunction(ctx context.Context, in *ConjunctionRequest, opts ...grpc.CallOption) (*ConjunctionResponse, error)
+	Tithy(ctx context.Context, in *TithyRequest, opts ...grpc.CallOption) (*TithyResponse, error)
 }
 
 type ephServiceClient struct {
@@ -71,6 +73,16 @@ func (c *ephServiceClient) FindConjunction(ctx context.Context, in *ConjunctionR
 	return out, nil
 }
 
+func (c *ephServiceClient) Tithy(ctx context.Context, in *TithyRequest, opts ...grpc.CallOption) (*TithyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TithyResponse)
+	err := c.cc.Invoke(ctx, EphService_Tithy_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EphServiceServer is the server API for EphService service.
 // All implementations must embed UnimplementedEphServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type EphServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
 	GetPos(context.Context, *PosRequest) (*PosResponse, error)
 	FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error)
+	Tithy(context.Context, *TithyRequest) (*TithyResponse, error)
 	mustEmbedUnimplementedEphServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedEphServiceServer) GetPos(context.Context, *PosRequest) (*PosR
 }
 func (UnimplementedEphServiceServer) FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method FindConjunction not implemented")
+}
+func (UnimplementedEphServiceServer) Tithy(context.Context, *TithyRequest) (*TithyResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Tithy not implemented")
 }
 func (UnimplementedEphServiceServer) mustEmbedUnimplementedEphServiceServer() {}
 func (UnimplementedEphServiceServer) testEmbeddedByValue()                    {}
@@ -172,6 +188,24 @@ func _EphService_FindConjunction_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EphService_Tithy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TithyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EphServiceServer).Tithy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EphService_Tithy_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EphServiceServer).Tithy(ctx, req.(*TithyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EphService_ServiceDesc is the grpc.ServiceDesc for EphService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var EphService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindConjunction",
 			Handler:    _EphService_FindConjunction_Handler,
+		},
+		{
+			MethodName: "Tithy",
+			Handler:    _EphService_Tithy_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

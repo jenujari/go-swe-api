@@ -31,7 +31,6 @@ jobs:
       run: |
         git reset --hard
         git clean -fd
-        docker build -f swe-builder.Dockerfile -t swe-builder:latest . 
         docker run --rm -v .:/workspace -w /workspace docker.io/bufbuild/buf generate proto
         docker compose -f compose.yaml build test_sweapi
         
