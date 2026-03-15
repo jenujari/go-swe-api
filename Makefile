@@ -37,3 +37,6 @@ sweapi: build-sweapi
 
 grpc-ui:
 	podman run --rm --network=host -p 8080:8080 docker.io/fullstorydev/grpcui -plaintext localhost:5678
+
+build-and-push-container:
+	./scripts/build_and_push.sh
