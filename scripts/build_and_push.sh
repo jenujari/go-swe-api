@@ -36,13 +36,6 @@ echo "Using '${cli}' for image operations."
 echo "Building ${sha_image}"
 ${cli} build -t "${sha_image}" -f Dockerfile .
 
-if [ "$MAIN_BRANCH_FLAG" -eq 1 ]; then
-  echo "Tagging ${sha_image} as ${latest_image}"
-  ${cli} tag "${sha_image}" "${latest_image}"
-else
-  echo "Not on main (current: ${current_branch}); skipping tagging as :latest"
-fi
-
 if [ -n "${DOCKER_USERNAME:-}" ] && [ -n "${DOCKER_PASSWORD:-}" ]; then
   echo "Logging in to docker.io as ${DOCKER_USERNAME} using ${cli}..."
   echo "${DOCKER_PASSWORD}" | ${cli} login docker.io -u "${DOCKER_USERNAME}" --password-stdin
@@ -52,6 +45,13 @@ fi
 
 echo "Pushing ${sha_image} to docker.io"
 ${cli} push "${sha_image}"
+
+if [ "$MAIN_BRANCH_FLAG" -eq 1 ]; then
+  echo "Tagging ${sha_image} as ${latest_image}"
+  ${cli} tag "${sha_image}" "${latest_image}"
+else
+  echo "Not on main (current: ${current_branch}); skipping tagging as :latest"
+fi
 
 if [ "$MAIN_BRANCH_FLAG" -eq 1 ]; then
   echo "Pushing ${latest_image} to docker.io"
