@@ -648,6 +648,8 @@ func (x *TithyRequest) GetTimestamp() string {
 type TithyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Tithy         int32                  `protobuf:"varint,1,opt,name=tithy,proto3" json:"tithy,omitempty"`
+	Nakshatra     string                 `protobuf:"bytes,2,opt,name=nakshatra,proto3" json:"nakshatra,omitempty"`
+	Weekday       string                 `protobuf:"bytes,3,opt,name=weekday,proto3" json:"weekday,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -687,6 +689,20 @@ func (x *TithyResponse) GetTithy() int32 {
 		return x.Tithy
 	}
 	return 0
+}
+
+func (x *TithyResponse) GetNakshatra() string {
+	if x != nil {
+		return x.Nakshatra
+	}
+	return ""
+}
+
+func (x *TithyResponse) GetWeekday() string {
+	if x != nil {
+		return x.Weekday
+	}
+	return ""
 }
 
 var File_swe_proto protoreflect.FileDescriptor
@@ -746,9 +762,11 @@ const file_swe_proto_rawDesc = "" +
 	"\x05start\x18\x01 \x01(\tR\x05start\x12\x10\n" +
 	"\x03end\x18\x02 \x01(\tR\x03end\",\n" +
 	"\fTithyRequest\x12\x1c\n" +
-	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\"%\n" +
+	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\"]\n" +
 	"\rTithyResponse\x12\x14\n" +
-	"\x05tithy\x18\x01 \x01(\x05R\x05tithy2\xdc\x01\n" +
+	"\x05tithy\x18\x01 \x01(\x05R\x05tithy\x12\x1c\n" +
+	"\tnakshatra\x18\x02 \x01(\tR\tnakshatra\x12\x18\n" +
+	"\aweekday\x18\x03 \x01(\tR\aweekday2\xdc\x01\n" +
 	"\n" +
 	"EphService\x12+\n" +
 	"\x04Ping\x12\x10.swe.PingRequest\x1a\x11.swe.PingResponse\x12+\n" +

@@ -75,4 +75,6 @@ message TithyRequest {
 
 message TithyResponse {
   int32 tithy = 1;
+  string nakshatra = 2;
+  string weekday = 3;
 }

@@ -95,13 +95,15 @@ func (s *Server) Tithy(ctx context.Context, req *pb.TithyRequest) (*pb.TithyResp
 		return nil, err
 	}
 
-	tithy, err := lib.CalcTithy(timestamp)
+	tithy, week, nakshatra, err := lib.CalcTithy(timestamp)
 	if err != nil {
 		return nil, err
 	}
 
 	return &pb.TithyResponse{
-		Tithy: tithy,
+		Tithy:     tithy,
+		Nakshatra: nakshatra,
+		Weekday:   week,
 	}, nil
 }
 
