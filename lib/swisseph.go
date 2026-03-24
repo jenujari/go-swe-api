@@ -63,29 +63,34 @@ func SweClear() {
 	swelib.Close()
 }
 
-func CalcTithy(timestamp time.Time) (int32, error) {
+func CalcTithy(timestamp time.Time) (int32, string, string, error) {
+	var weekDay, nakshatra string
 
 	sidTime, err := UTCToSiderealTime(timestamp)
 
 	if err != nil {
-		return 0, err
+		return 0, weekDay, nakshatra, err
 	}
 
 	sunCord, err := GetPlanetCalculation(sidTime, baselib.SUN)
 
 	if err != nil {
-		return 0, err
+		return 0, weekDay, nakshatra, err
 	}
 
 	moonCord, err := GetPlanetCalculation(sidTime, baselib.MOON)
 
 	if err != nil {
-		return 0, err
+		return 0, weekDay, nakshatra, err
 	}
 
 	tithy := baselib.CalcTithy(moonCord.Longitude, sunCord.Longitude)
+	weekDay = timestamp.Weekday().String()
 
-	return int32(tithy), nil
+	moonCord.CalculateDerivedValues()
+	nakshatra = moonCord.Nakshatra.Name
+
+	return int32(tithy), weekDay, nakshatra, nil
 
 }
 

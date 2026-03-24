@@ -85,5 +85,7 @@ func TestEphServiceClient(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, resp)
 		assert.Equal(t, int32(27), resp.Tithy)
+		assert.Equal(t, "Wednesday", resp.Weekday)
+		assert.Equal(t, "Anuradha", resp.Nakshatra)
 	})
 }
