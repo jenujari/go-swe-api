@@ -22,7 +22,7 @@ fi
 
 if [ -n "${JENKINS_TOKEN:-}" ]; then
   echo "Triggering Jenkins build with SHA ${shortSha:-}"
-  curl -X POST -u github-trigger:${JENKINS_TOKEN} "https://jenkins.vilabs.co.in/job/swe-api-deploy/buildWithParameters?token=trigger-token-swe-api&IMAGE_TAG=${shortSha:-}"
+  curl -X POST -u github-trigger:${JENKINS_TOKEN} "https://jenkins.vilabs.co.in/job/swe-api-deploy/buildWithParameters?token=trigger-token-swe-api&IMAGE_TAG=latest&IMAGE_SHA=${shortSha}"
 else
   echo "JENKINS_TOKEN not set; skipping Jenkins trigger."
 fi
