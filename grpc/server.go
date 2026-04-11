@@ -66,11 +66,21 @@ func (s *Server) FindConjunction(ctx context.Context, req *pb.ConjunctionRequest
 		return nil, err
 	}
 
+	orb := float64(req.Orb)
+	if orb <= 0 {
+		orb = 1.0 // default orb value if not provided or invalid
+	}
+
+	step := req.Step
+	if step <= 0 {
+		step = 1.0 / 24.0 // default step value (1 hour) if not provided or invalid
+	}
+
 	startConj, endConj, found, err := lib.FindConjunctionRange(
 		startTime,
 		endTime,
-		float64(req.Orb),
-		req.Step,
+		orb,
+		step,
 		baselib.PLANET_LIB_MAP[req.Planet1],
 		baselib.PLANET_LIB_MAP[req.Planet2],
 	)
