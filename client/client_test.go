@@ -89,3 +89,48 @@ func TestEphServiceClient(t *testing.T) {
 		assert.Equal(t, "Anuradha", resp.Nakshatra)
 	})
 }
+
+func TestFindConjunction(t *testing.T) {
+	config.SetConfig(&config.Config{
+		App: struct {
+			Name  string `mapstructure:"name"`
+			Port  int    `mapstructure:"port"`
+			Debug bool   `mapstructure:"debug"`
+		}{
+			Name:  "test-app",
+			Port:  5678,
+			Debug: true,
+		},
+	})
+
+	initTestGRPC()
+
+	opts := []googlegrpc.DialOption{
+		googlegrpc.WithContextDialer(bufDialer),
+		googlegrpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", opts...)
+	if err != nil {
+		t.Fatalf("Failed to dial bufnet: %v", err)
+	}
+
+	client := &EphServiceClient{
+		conn:   conn,
+		client: pb.NewEphServiceClient(conn),
+	}
+	defer client.Close()
+
+	resp, err := client.FindConjunction(
+		t.Context(),
+		"2026-01-01T00:00:00Z",
+		"2027-01-01T00:00:00Z",
+		"Mars",
+		"Saturn",
+		1,
+		0.041666,
+	)
+	assert.NoError(t, err)
+	assert.NotNil(t, resp)
+	assert.Equal(t, "2026-04-18T10:57:32Z", resp.Start)
+	assert.Equal(t, "2026-04-21T10:57:28Z", resp.End)
+}
