@@ -136,13 +136,10 @@ func Test_CalcTithy(T *testing.T) {
 
 func Test_GetAllPlanetsBalas(T *testing.T) {
 	t1 := time.Date(2026, 1, 14, 13, 45, 30, 0, time.UTC)
-	result, err := GetAllPlanetsBalas(t1)
+	planetsMap, err := GetAllPlanetsBalas(t1)
 
 	assert.NoError(T, err, "Expected no error, got %v", err)
-	assert.NotNil(T, result, "Expected non-nil result, got nil")
-
-	planetsMap, ok := result.(map[string]PlanetBalas)
-	assert.True(T, ok, "Expected result to be map[string]PlanetBalas")
+	assert.NotNil(T, planetsMap, "Expected non-nil result, got nil")
 
 	// Expect all 9 planets (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Rahu, Ketu)
 	expectedPlanets := []string{"Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Rahu", "Ketu"}

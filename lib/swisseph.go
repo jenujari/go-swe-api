@@ -274,70 +274,78 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 	return planetCord, nil
 }
 
-func GetAllPlanetsBalas(utcTime time.Time) (any, error) {
-	jd, err := UTCToSiderealTime(utcTime)
+// computePlanetBalas calculates all bala values for a single planet and returns
+// the assembled PlanetBalas struct. sunLong is required because UdayBal is
+// relative to the Sun's longitude.
+func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet string) (PlanetBalas, error) {
+	cords.CalculateDerivedValues()
 
+	kshetraBala, err := bal.KshetraBal(cords.Longitude, planet)
+	if err != nil {
+		return PlanetBalas{}, fmt.Errorf("%s: KshetraBal: %w", planet, err)
+	}
+
+	navamshaBala, err := bal.NavanshBal(cords.Longitude, planet)
+	if err != nil {
+		return PlanetBalas{}, fmt.Errorf("%s: NavanshBal: %w", planet, err)
+	}
+
+	return PlanetBalas{
+		Cords:        cords,
+		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.SpeedLong, planet),
+		UchchaBala:   bal.UchhBal(cords.Longitude, planet),
+		VakraBala:    bal.VakraBal(cords.SpeedLong, planet),
+		KshetraBala:  kshetraBala,
+		NavamshaBala: navamshaBala,
+	}, nil
+}
+
+// planets processed by GetAllPlanetsBalas (excludes outer planets).
+var balaPlanets = []string{
+	baselib.SUN,
+	baselib.MOON,
+	baselib.MERCURY,
+	baselib.VENUS,
+	baselib.MARS,
+	baselib.JUPITER,
+	baselib.SATURN,
+	baselib.RAHU,
+	baselib.KETU,
+}
+
+// GetAllPlanetsBalas computes positional coordinates and Shadbala components
+// (Uday, Uchcha, Vakra, Kshetra, Navamsha) for the nine Vedic planets at the
+// given UTC timestamp.
+func GetAllPlanetsBalas(utcTime time.Time) (map[string]PlanetBalas, error) {
+	jd, err := UTCToSiderealTime(utcTime)
 	if err != nil {
 		return nil, err
 	}
 
-	var mapPlanets = make(map[string]PlanetBalas)
+	// Sun must be computed first — UdayBal for every other planet is relative
+	// to the Sun's longitude.
 	sunCords, err := GetPlanetCalculation(jd, baselib.SUN)
 	if err != nil {
 		return nil, err
 	}
 
-	sunCords.CalculateDerivedValues()
+	mapPlanets := make(map[string]PlanetBalas, len(balaPlanets))
 
-	sunKeshBala, err := bal.KshetraBal(sunCords.Longitude, baselib.SUN)
-	if err != nil {
-		return nil, err
-	}
-
-	sunNavamshaBala, err := bal.NavanshBal(sunCords.Longitude, baselib.SUN)
-	if err != nil {
-		return nil, err
-	}
-
-	mapPlanets[baselib.SUN] = PlanetBalas{
-		Cords:        sunCords,
-		UdayBala:     bal.UdayBal(sunCords.Longitude, 0, 0, baselib.SUN),
-		UchchaBala:   bal.UchhBal(sunCords.Longitude, baselib.SUN),
-		VakraBala:    bal.VakraBal(sunCords.SpeedLong, baselib.SUN),
-		KshetraBala:  sunKeshBala,
-		NavamshaBala: sunNavamshaBala,
-	}
-
-	for planet := range baselib.PLANET_LIB_MAP {
-		if planet == baselib.SUN || planet == baselib.PLUTO || planet == baselib.NEPTUNE || planet == baselib.URANUS {
-			continue
+	for _, planet := range balaPlanets {
+		cords := sunCords
+		if planet != baselib.SUN {
+			cords, err = GetPlanetCalculation(jd, planet)
+			if err != nil {
+				return nil, err
+			}
 		}
 
-		planetCord, err := GetPlanetCalculation(jd, planet)
+		pb, err := computePlanetBalas(sunCords.Longitude, cords, planet)
 		if err != nil {
 			return nil, err
 		}
 
-		planetCord.CalculateDerivedValues()
-
-		planetKeshBala, err := bal.KshetraBal(planetCord.Longitude, planet)
-		if err != nil {
-			return nil, err
-		}
-
-		planetNavamshaBala, err := bal.NavanshBal(planetCord.Longitude, planet)
-		if err != nil {
-			return nil, err
-		}
-
-		mapPlanets[planet] = PlanetBalas{
-			Cords:        planetCord,
-			UdayBala:     bal.UdayBal(sunCords.Longitude, planetCord.Longitude, planetCord.SpeedLong, planet),
-			UchchaBala:   bal.UchhBal(planetCord.Longitude, planet),
-			VakraBala:    bal.VakraBal(planetCord.SpeedLong, planet),
-			KshetraBala:  planetKeshBala,
-			NavamshaBala: planetNavamshaBala,
-		}
+		mapPlanets[planet] = pb
 	}
 
 	return mapPlanets, nil
