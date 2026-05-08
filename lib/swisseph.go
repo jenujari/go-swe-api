@@ -8,6 +8,7 @@ import (
 	"time"
 
 	baselib "github.com/jenujari/planets-lib"
+	bal "github.com/jenujari/planets-lib/bal"
 	swelib "github.com/mshafiee/swephgo"
 )
 
@@ -268,6 +269,76 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 	planetCord.SpeedLong = xp[3]
 	planetCord.SpeedLat = xp[4]
 	planetCord.SpeedDist = xp[5]
+	planetCord.Name = planet
 
 	return planetCord, nil
+}
+
+func GetAllPlanetsBalas(utcTime time.Time) (any, error) {
+	jd, err := UTCToSiderealTime(utcTime)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var mapPlanets = make(map[string]PlanetBalas)
+	sunCords, err := GetPlanetCalculation(jd, baselib.SUN)
+	if err != nil {
+		return nil, err
+	}
+
+	sunCords.CalculateDerivedValues()
+
+	sunKeshBala, err := bal.KshetraBal(sunCords.Longitude, baselib.SUN)
+	if err != nil {
+		return nil, err
+	}
+
+	sunNavamshaBala, err := bal.NavanshBal(sunCords.Longitude, baselib.SUN)
+	if err != nil {
+		return nil, err
+	}
+
+	mapPlanets[baselib.SUN] = PlanetBalas{
+		Cords:        sunCords,
+		UdayBala:     bal.UdayBal(sunCords.Longitude, 0, 0, baselib.SUN),
+		UchchaBala:   bal.UchhBal(sunCords.Longitude, baselib.SUN),
+		VakraBala:    bal.VakraBal(sunCords.SpeedLong, baselib.SUN),
+		KshetraBala:  sunKeshBala,
+		NavamshaBala: sunNavamshaBala,
+	}
+
+	for planet := range baselib.PLANET_LIB_MAP {
+		if planet == baselib.SUN || planet == baselib.PLUTO || planet == baselib.NEPTUNE || planet == baselib.URANUS {
+			continue
+		}
+
+		planetCord, err := GetPlanetCalculation(jd, planet)
+		if err != nil {
+			return nil, err
+		}
+
+		planetCord.CalculateDerivedValues()
+
+		planetKeshBala, err := bal.KshetraBal(planetCord.Longitude, planet)
+		if err != nil {
+			return nil, err
+		}
+
+		planetNavamshaBala, err := bal.NavanshBal(planetCord.Longitude, planet)
+		if err != nil {
+			return nil, err
+		}
+
+		mapPlanets[planet] = PlanetBalas{
+			Cords:        planetCord,
+			UdayBala:     bal.UdayBal(sunCords.Longitude, planetCord.Longitude, planetCord.SpeedLong, planet),
+			UchchaBala:   bal.UchhBal(planetCord.Longitude, planet),
+			VakraBala:    bal.VakraBal(planetCord.SpeedLong, planet),
+			KshetraBala:  planetKeshBala,
+			NavamshaBala: planetNavamshaBala,
+		}
+	}
+
+	return mapPlanets, nil
 }
