@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	// github.com/goforj/godump v1.9.0
-	github.com/jenujari/planets-lib v0.0.0-20260306215518-3d5127403895
+	github.com/jenujari/planets-lib v0.0.0-20260502215226-474c6408e945
 	github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3
 	github.com/mshafiee/swephgo v1.1.0
 	github.com/spf13/viper v1.21.0
