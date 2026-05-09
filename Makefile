@@ -24,7 +24,8 @@ build-sweapi-test: proto-gen
 # make sweapi-test TEST=PosHandler
 sweapi-test:
 	@echo "Running test $(TEST)"
-	podman compose -f compose.yaml  run --rm test_sweapi -run $(TEST)
+	podman compose -f compose.yaml run --rm test_sweapi -run $(TEST) -coverpkg=./... -coverprofile=coverage.out
+	podman compose -f compose.yaml run --entrypoint sh --rm test_sweapi -c "grep -v '\\.pb\\.go' coverage.out > cov.tmp && mv cov.tmp coverage.out && go tool cover -func=coverage.out"
 	@echo "Test $(TEST) completed"
 
 

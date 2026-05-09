@@ -65,7 +65,7 @@ func TestEphServiceClient(t *testing.T) {
 		conn:   conn,
 		client: pb.NewEphServiceClient(conn),
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	t.Run("Ping", func(t *testing.T) {
 		resp, err := client.Ping(t.Context())
@@ -139,7 +139,7 @@ func TestFindConjunction(t *testing.T) {
 		conn:   conn,
 		client: pb.NewEphServiceClient(conn),
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	resp, err := client.FindConjunction(
 		t.Context(),

@@ -231,7 +231,7 @@ func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
 func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetCord, error) {
 	var xp = make([]float64, 6)
 	var serr = make([]byte, 1000)
-	var isKetu bool = false
+	var isKetu = false
 
 	if planet == "Ketu" {
 		isKetu = true

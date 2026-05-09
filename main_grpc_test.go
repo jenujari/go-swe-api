@@ -39,7 +39,7 @@ func TestGRPC_Ping(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	client := pb.NewEphServiceClient(conn)
 	resp, err := client.Ping(ctx, &pb.PingRequest{})
 	if err != nil {
@@ -55,7 +55,7 @@ func TestGRPC_GetPos(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	client := pb.NewEphServiceClient(conn)
 	resp, err := client.GetPos(ctx, &pb.PosRequest{
 		Time:       "2026-01-26T00:00:00Z",
@@ -77,7 +77,7 @@ func TestGRPC_GetBalas(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	client := pb.NewEphServiceClient(conn)
 	resp, err := client.GetBalas(ctx, &pb.BalasRequest{
 		Timestamp: "2026-01-14T13:45:30Z",

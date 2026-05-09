@@ -34,7 +34,22 @@ jobs:
         docker run --rm -v .:/workspace -w /workspace docker.io/bufbuild/buf generate proto
         docker compose -f compose.yaml build test_sweapi
         
-    - name: Run Test
-      run: docker compose -f compose.yaml run --rm test_sweapi
-    
-          
+    - name: Run golangci-lint
+      run: docker compose -f compose.yaml run --entrypoint sh --rm test_sweapi -c "go tool golangci-lint run -v"
+
+    - name: Run tests with coverage
+      run: |
+        docker compose -f compose.yaml run --entrypoint sh --rm test_sweapi -c "go test ./... -v -coverpkg=./... -coverprofile=coverage.out && grep -v '\\.pb\\.go' coverage.out > cov.tmp && mv cov.tmp coverage.out && go tool cover -func=coverage.out | tee coverage-summary.txt"
+
+    - name: Generate Job Summary
+      run: |
+        echo "### Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat coverage-summary.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload coverage artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage.out
