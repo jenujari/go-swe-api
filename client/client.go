@@ -68,3 +68,12 @@ func (c *EphServiceClient) Tithy(ctx context.Context, timestamp string) (*pb.Tit
 		Timestamp: timestamp,
 	})
 }
+
+// GetBalas retrieves the shadbala components and coordinates for all 9 planets at a specific time.
+// timeStr should be in RFC3339 format (e.g., "2026-01-26T00:00:00Z").
+func (c *EphServiceClient) GetBalas(ctx context.Context, timeStr string) (*pb.BalasResponse, error) {
+	return c.client.GetBalas(ctx, &pb.BalasRequest{
+		Timestamp: timeStr,
+	})
+}
+

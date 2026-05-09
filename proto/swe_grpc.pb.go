@@ -23,6 +23,7 @@ const (
 	EphService_GetPos_FullMethodName          = "/swe.EphService/GetPos"
 	EphService_FindConjunction_FullMethodName = "/swe.EphService/FindConjunction"
 	EphService_Tithy_FullMethodName           = "/swe.EphService/Tithy"
+	EphService_GetBalas_FullMethodName        = "/swe.EphService/GetBalas"
 )
 
 // EphServiceClient is the client API for EphService service.
@@ -33,6 +34,7 @@ type EphServiceClient interface {
 	GetPos(ctx context.Context, in *PosRequest, opts ...grpc.CallOption) (*PosResponse, error)
 	FindConjunction(ctx context.Context, in *ConjunctionRequest, opts ...grpc.CallOption) (*ConjunctionResponse, error)
 	Tithy(ctx context.Context, in *TithyRequest, opts ...grpc.CallOption) (*TithyResponse, error)
+	GetBalas(ctx context.Context, in *BalasRequest, opts ...grpc.CallOption) (*BalasResponse, error)
 }
 
 type ephServiceClient struct {
@@ -83,6 +85,16 @@ func (c *ephServiceClient) Tithy(ctx context.Context, in *TithyRequest, opts ...
 	return out, nil
 }
 
+func (c *ephServiceClient) GetBalas(ctx context.Context, in *BalasRequest, opts ...grpc.CallOption) (*BalasResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BalasResponse)
+	err := c.cc.Invoke(ctx, EphService_GetBalas_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EphServiceServer is the server API for EphService service.
 // All implementations must embed UnimplementedEphServiceServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type EphServiceServer interface {
 	GetPos(context.Context, *PosRequest) (*PosResponse, error)
 	FindConjunction(context.Context, *ConjunctionRequest) (*ConjunctionResponse, error)
 	Tithy(context.Context, *TithyRequest) (*TithyResponse, error)
+	GetBalas(context.Context, *BalasRequest) (*BalasResponse, error)
 	mustEmbedUnimplementedEphServiceServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedEphServiceServer) FindConjunction(context.Context, *Conjuncti
 }
 func (UnimplementedEphServiceServer) Tithy(context.Context, *TithyRequest) (*TithyResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Tithy not implemented")
+}
+func (UnimplementedEphServiceServer) GetBalas(context.Context, *BalasRequest) (*BalasResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetBalas not implemented")
 }
 func (UnimplementedEphServiceServer) mustEmbedUnimplementedEphServiceServer() {}
 func (UnimplementedEphServiceServer) testEmbeddedByValue()                    {}
@@ -206,6 +222,24 @@ func _EphService_Tithy_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EphService_GetBalas_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BalasRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EphServiceServer).GetBalas(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EphService_GetBalas_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EphServiceServer).GetBalas(ctx, req.(*BalasRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EphService_ServiceDesc is the grpc.ServiceDesc for EphService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var EphService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Tithy",
 			Handler:    _EphService_Tithy_Handler,
+		},
+		{
+			MethodName: "GetBalas",
+			Handler:    _EphService_GetBalas_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
