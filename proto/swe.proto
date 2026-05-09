@@ -55,6 +55,8 @@ message PlanetCord {
   bool          is_retro       = 15;
   string        sign_lord      = 16;
   string        sign_lordship  = 17;
+  string        navamsa_sign   = 18;
+  bool          vargottama     = 19;
 }
 
 message PosResponse {

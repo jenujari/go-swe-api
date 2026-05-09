@@ -108,6 +108,9 @@ func TestEphServiceClient(t *testing.T) {
 		assert.Equal(t, "left-vedha", sun.Cords.Vedha)
 		assert.Equal(t, "Saturn", sun.Cords.SignLord)
 		assert.Equal(t, "Enemy", sun.Cords.SignLordship)
+		assert.NotEmpty(t, sun.Cords.NavamsaSign)
+		// Vargottama is boolean, so we just assert it doesn't panic
+		_ = sun.Cords.Vargottama
 	})
 }
 

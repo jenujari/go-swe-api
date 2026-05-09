@@ -292,7 +292,7 @@ func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet strin
 
 	return PlanetBalas{
 		Cords:        cords,
-		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.SpeedLong, planet),
+		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.IsRetro, planet),
 		UchchaBala:   bal.UchhBal(cords.Longitude, planet),
 		VakraBala:    bal.VakraBal(cords.SpeedLong, planet),
 		KshetraBala:  kshetraBala,

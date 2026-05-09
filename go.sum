@@ -315,6 +315,8 @@ github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/jenujari/planets-lib v0.0.0-20260508180552-ccfb0a0ceddc h1:H0/NzQ1C1kj/6xLTeNbRCQutWvT42EcHCQ35/B/Nmow=
 github.com/jenujari/planets-lib v0.0.0-20260508180552-ccfb0a0ceddc/go.mod h1:6u6GX0QxIFzebvVqoT2amXFxlhyrDIVgt0ORmjmx7QQ=
+github.com/jenujari/planets-lib v0.0.0-20260509122339-6bc8f7a018d4 h1:GAw0ZXUEo0DMF1zlRdRphyWtGEpWOg/w+MYcmIBum4w=
+github.com/jenujari/planets-lib v0.0.0-20260509122339-6bc8f7a018d4/go.mod h1:6u6GX0QxIFzebvVqoT2amXFxlhyrDIVgt0ORmjmx7QQ=
 github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3 h1:t52wCeqMH7OZC/2HvZ+L1FZEossEiLTcL5k9Lt6EndU=
 github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3/go.mod h1:r8v8RMr4jW+eUa4XopKvk3jAZlUKAMchwIJ3KRSPfq8=
 github.com/jgautheron/goconst v1.7.1 h1:VpdAG7Ca7yvvJk5n8dMwQhfEZJh95kl/Hl9S1OI5Jkk=
