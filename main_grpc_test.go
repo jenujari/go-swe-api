@@ -70,3 +70,26 @@ func TestGRPC_GetPos(t *testing.T) {
 	assert.NotNil(t, sun)
 	assert.InDelta(t, 281.808299, sun.Longitude, 0.001)
 }
+
+func TestGRPC_GetBalas(t *testing.T) {
+	ctx := context.Background()
+	conn, err := googlegrpc.NewClient("passthrough:///bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		t.Fatalf("Failed to dial bufnet: %v", err)
+	}
+	defer conn.Close()
+	client := pb.NewEphServiceClient(conn)
+	resp, err := client.GetBalas(ctx, &pb.BalasRequest{
+		Timestamp: "2026-01-14T13:45:30Z",
+	})
+	if err != nil {
+		t.Fatalf("GetBalas failed: %v", err)
+	}
+
+	assert.Len(t, resp.Results, 9)
+	sun, ok := resp.Results["Sun"]
+	assert.True(t, ok)
+	assert.NotNil(t, sun)
+	assert.InDelta(t, 100.0, sun.UdayBala, 0.001)
+	assert.Equal(t, "Sun", sun.Cords.Name)
+}

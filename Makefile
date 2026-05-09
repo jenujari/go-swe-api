@@ -16,7 +16,7 @@ proto-gen:
 	podman run --rm -v .:/workspace -w /workspace docker.io/bufbuild/buf generate proto
 	@echo "Generated proto code"
 
-build-sweapi-test: build-swe-base proto-gen
+build-sweapi-test: proto-gen
 	podman compose -f compose.yaml build test_sweapi
 	@echo "Built test_sweapi image"
 

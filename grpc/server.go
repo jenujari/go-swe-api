@@ -117,14 +117,43 @@ func (s *Server) Tithy(ctx context.Context, req *pb.TithyRequest) (*pb.TithyResp
 	}, nil
 }
 
+func (s *Server) GetBalas(ctx context.Context, req *pb.BalasRequest) (*pb.BalasResponse, error) {
+	t, err := time.Parse(time.RFC3339, req.Timestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	balasMap, err := lib.GetAllPlanetsBalas(t)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make(map[string]*pb.PlanetBalas)
+	for name, pbBalas := range balasMap {
+		results[name] = &pb.PlanetBalas{
+			Cords:        mapToProtoPlanetCord(pbBalas.Cords),
+			UdayBala:     pbBalas.UdayBala,
+			UchchaBala:   pbBalas.UchchaBala,
+			VakraBala:    pbBalas.VakraBala,
+			KshetraBala:  pbBalas.KshetraBala,
+			NavamshaBala: pbBalas.NavamshaBala,
+		}
+	}
+
+	return &pb.BalasResponse{Results: results}, nil
+}
+
 func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 	return &pb.PlanetCord{
-		Longitude: pc.Longitude,
-		Latitude:  pc.Latitude,
-		Distance:  pc.Distance,
-		SpeedLong: pc.SpeedLong,
-		SpeedLat:  pc.SpeedLat,
-		SpeedDist: pc.SpeedDist,
+		Name:          pc.Name,
+		Longitude:     pc.Longitude,
+		Latitude:      pc.Latitude,
+		Distance:      pc.Distance,
+		SpeedLong:     pc.SpeedLong,
+		SpeedLat:      pc.SpeedLat,
+		SpeedDist:     pc.SpeedDist,
+		SpeedCategory: pc.SpeedCategory,
+		Vedha:         pc.Vedha,
 		LongitudeDms: &pb.DMS{
 			IsNegative: pc.LongitudeDMS.IsNegative,
 			D:          int32(pc.LongitudeDMS.D),
@@ -148,6 +177,9 @@ func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 			Name: pc.Nakshatra.Name,
 			Pada: int32(pc.Nakshatra.Pada),
 		},
-		IsRetro: pc.IsRetro,
+		IsRetro:      pc.IsRetro,
+		SignLord:     pc.SignLord,
+		SignLordship: pc.SignLordship,
 	}
 }
+

@@ -88,6 +88,27 @@ func TestEphServiceClient(t *testing.T) {
 		assert.Equal(t, "Wednesday", resp.Weekday)
 		assert.Equal(t, "Anuradha", resp.Nakshatra)
 	})
+
+	t.Run("GetBalas", func(t *testing.T) {
+		resp, err := client.GetBalas(t.Context(), "2026-01-14T13:45:30Z")
+		assert.NoError(t, err)
+		assert.NotNil(t, resp)
+		
+		// Assert map has 9 planets
+		assert.Len(t, resp.Results, 9)
+		
+		sun, ok := resp.Results["Sun"]
+		assert.True(t, ok)
+		assert.NotNil(t, sun)
+		assert.InDelta(t, 100.0, sun.UdayBala, 0.001)
+		
+		// Verify some of the new fields added to PlanetCord
+		assert.Equal(t, "Sun", sun.Cords.Name)
+		assert.Equal(t, "ati-sheeghra", sun.Cords.SpeedCategory)
+		assert.Equal(t, "left-vedha", sun.Cords.Vedha)
+		assert.Equal(t, "Saturn", sun.Cords.SignLord)
+		assert.Equal(t, "Enemy", sun.Cords.SignLordship)
+	})
 }
 
 func TestFindConjunction(t *testing.T) {

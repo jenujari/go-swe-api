@@ -291,18 +291,23 @@ func (x *NakshatraPada) GetPada() int32 {
 
 type PlanetCord struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Longitude     float64                `protobuf:"fixed64,1,opt,name=longitude,proto3" json:"longitude,omitempty"`
-	Latitude      float64                `protobuf:"fixed64,2,opt,name=latitude,proto3" json:"latitude,omitempty"`
-	Distance      float64                `protobuf:"fixed64,3,opt,name=distance,proto3" json:"distance,omitempty"`
-	SpeedLong     float64                `protobuf:"fixed64,4,opt,name=speed_long,json=speedLong,proto3" json:"speed_long,omitempty"`
-	SpeedLat      float64                `protobuf:"fixed64,5,opt,name=speed_lat,json=speedLat,proto3" json:"speed_lat,omitempty"`
-	SpeedDist     float64                `protobuf:"fixed64,6,opt,name=speed_dist,json=speedDist,proto3" json:"speed_dist,omitempty"`
-	LongitudeDms  *DMS                   `protobuf:"bytes,7,opt,name=longitude_dms,json=longitudeDms,proto3" json:"longitude_dms,omitempty"`
-	LatitudeDms   *DMS                   `protobuf:"bytes,8,opt,name=latitude_dms,json=latitudeDms,proto3" json:"latitude_dms,omitempty"`
-	SpeedLongDms  *DMS                   `protobuf:"bytes,9,opt,name=speed_long_dms,json=speedLongDms,proto3" json:"speed_long_dms,omitempty"`
-	Sign          string                 `protobuf:"bytes,10,opt,name=sign,proto3" json:"sign,omitempty"`
-	Nakshatra     *NakshatraPada         `protobuf:"bytes,11,opt,name=nakshatra,proto3" json:"nakshatra,omitempty"`
-	IsRetro       bool                   `protobuf:"varint,12,opt,name=is_retro,json=isRetro,proto3" json:"is_retro,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Longitude     float64                `protobuf:"fixed64,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	Latitude      float64                `protobuf:"fixed64,3,opt,name=latitude,proto3" json:"latitude,omitempty"`
+	Distance      float64                `protobuf:"fixed64,4,opt,name=distance,proto3" json:"distance,omitempty"`
+	SpeedLong     float64                `protobuf:"fixed64,5,opt,name=speed_long,json=speedLong,proto3" json:"speed_long,omitempty"`
+	SpeedLat      float64                `protobuf:"fixed64,6,opt,name=speed_lat,json=speedLat,proto3" json:"speed_lat,omitempty"`
+	SpeedDist     float64                `protobuf:"fixed64,7,opt,name=speed_dist,json=speedDist,proto3" json:"speed_dist,omitempty"`
+	SpeedCategory string                 `protobuf:"bytes,8,opt,name=speed_category,json=speedCategory,proto3" json:"speed_category,omitempty"`
+	Vedha         string                 `protobuf:"bytes,9,opt,name=vedha,proto3" json:"vedha,omitempty"`
+	LongitudeDms  *DMS                   `protobuf:"bytes,10,opt,name=longitude_dms,json=longitudeDms,proto3" json:"longitude_dms,omitempty"`
+	LatitudeDms   *DMS                   `protobuf:"bytes,11,opt,name=latitude_dms,json=latitudeDms,proto3" json:"latitude_dms,omitempty"`
+	SpeedLongDms  *DMS                   `protobuf:"bytes,12,opt,name=speed_long_dms,json=speedLongDms,proto3" json:"speed_long_dms,omitempty"`
+	Sign          string                 `protobuf:"bytes,13,opt,name=sign,proto3" json:"sign,omitempty"`
+	Nakshatra     *NakshatraPada         `protobuf:"bytes,14,opt,name=nakshatra,proto3" json:"nakshatra,omitempty"`
+	IsRetro       bool                   `protobuf:"varint,15,opt,name=is_retro,json=isRetro,proto3" json:"is_retro,omitempty"`
+	SignLord      string                 `protobuf:"bytes,16,opt,name=sign_lord,json=signLord,proto3" json:"sign_lord,omitempty"`
+	SignLordship  string                 `protobuf:"bytes,17,opt,name=sign_lordship,json=signLordship,proto3" json:"sign_lordship,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -335,6 +340,13 @@ func (x *PlanetCord) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PlanetCord.ProtoReflect.Descriptor instead.
 func (*PlanetCord) Descriptor() ([]byte, []int) {
 	return file_swe_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PlanetCord) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
 }
 
 func (x *PlanetCord) GetLongitude() float64 {
@@ -379,6 +391,20 @@ func (x *PlanetCord) GetSpeedDist() float64 {
 	return 0
 }
 
+func (x *PlanetCord) GetSpeedCategory() string {
+	if x != nil {
+		return x.SpeedCategory
+	}
+	return ""
+}
+
+func (x *PlanetCord) GetVedha() string {
+	if x != nil {
+		return x.Vedha
+	}
+	return ""
+}
+
 func (x *PlanetCord) GetLongitudeDms() *DMS {
 	if x != nil {
 		return x.LongitudeDms
@@ -419,6 +445,20 @@ func (x *PlanetCord) GetIsRetro() bool {
 		return x.IsRetro
 	}
 	return false
+}
+
+func (x *PlanetCord) GetSignLord() string {
+	if x != nil {
+		return x.SignLord
+	}
+	return ""
+}
+
+func (x *PlanetCord) GetSignLordship() string {
+	if x != nil {
+		return x.SignLordship
+	}
+	return ""
 }
 
 type PosResponse struct {
@@ -705,6 +745,178 @@ func (x *TithyResponse) GetWeekday() string {
 	return ""
 }
 
+type BalasRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp     string                 `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BalasRequest) Reset() {
+	*x = BalasRequest{}
+	mi := &file_swe_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BalasRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BalasRequest) ProtoMessage() {}
+
+func (x *BalasRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_swe_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BalasRequest.ProtoReflect.Descriptor instead.
+func (*BalasRequest) Descriptor() ([]byte, []int) {
+	return file_swe_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *BalasRequest) GetTimestamp() string {
+	if x != nil {
+		return x.Timestamp
+	}
+	return ""
+}
+
+type PlanetBalas struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cords         *PlanetCord            `protobuf:"bytes,1,opt,name=cords,proto3" json:"cords,omitempty"`
+	UdayBala      float64                `protobuf:"fixed64,2,opt,name=uday_bala,json=udayBala,proto3" json:"uday_bala,omitempty"`
+	UchchaBala    float64                `protobuf:"fixed64,3,opt,name=uchcha_bala,json=uchchaBala,proto3" json:"uchcha_bala,omitempty"`
+	VakraBala     float64                `protobuf:"fixed64,4,opt,name=vakra_bala,json=vakraBala,proto3" json:"vakra_bala,omitempty"`
+	KshetraBala   float64                `protobuf:"fixed64,5,opt,name=kshetra_bala,json=kshetraBala,proto3" json:"kshetra_bala,omitempty"`
+	NavamshaBala  float64                `protobuf:"fixed64,6,opt,name=navamsha_bala,json=navamshaBala,proto3" json:"navamsha_bala,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlanetBalas) Reset() {
+	*x = PlanetBalas{}
+	mi := &file_swe_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlanetBalas) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlanetBalas) ProtoMessage() {}
+
+func (x *PlanetBalas) ProtoReflect() protoreflect.Message {
+	mi := &file_swe_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlanetBalas.ProtoReflect.Descriptor instead.
+func (*PlanetBalas) Descriptor() ([]byte, []int) {
+	return file_swe_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *PlanetBalas) GetCords() *PlanetCord {
+	if x != nil {
+		return x.Cords
+	}
+	return nil
+}
+
+func (x *PlanetBalas) GetUdayBala() float64 {
+	if x != nil {
+		return x.UdayBala
+	}
+	return 0
+}
+
+func (x *PlanetBalas) GetUchchaBala() float64 {
+	if x != nil {
+		return x.UchchaBala
+	}
+	return 0
+}
+
+func (x *PlanetBalas) GetVakraBala() float64 {
+	if x != nil {
+		return x.VakraBala
+	}
+	return 0
+}
+
+func (x *PlanetBalas) GetKshetraBala() float64 {
+	if x != nil {
+		return x.KshetraBala
+	}
+	return 0
+}
+
+func (x *PlanetBalas) GetNavamshaBala() float64 {
+	if x != nil {
+		return x.NavamshaBala
+	}
+	return 0
+}
+
+type BalasResponse struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Results       map[string]*PlanetBalas `protobuf:"bytes,1,rep,name=results,proto3" json:"results,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BalasResponse) Reset() {
+	*x = BalasResponse{}
+	mi := &file_swe_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BalasResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BalasResponse) ProtoMessage() {}
+
+func (x *BalasResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_swe_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BalasResponse.ProtoReflect.Descriptor instead.
+func (*BalasResponse) Descriptor() ([]byte, []int) {
+	return file_swe_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *BalasResponse) GetResults() map[string]*PlanetBalas {
+	if x != nil {
+		return x.Results
+	}
+	return nil
+}
+
 var File_swe_proto protoreflect.FileDescriptor
 
 const file_swe_proto_rawDesc = "" +
@@ -728,24 +940,29 @@ const file_swe_proto_rawDesc = "" +
 	"\x01s\x18\x04 \x01(\x02R\x01s\"7\n" +
 	"\rNakshatraPada\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\xaa\x03\n" +
+	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\xbd\x04\n" +
 	"\n" +
-	"PlanetCord\x12\x1c\n" +
-	"\tlongitude\x18\x01 \x01(\x01R\tlongitude\x12\x1a\n" +
-	"\blatitude\x18\x02 \x01(\x01R\blatitude\x12\x1a\n" +
-	"\bdistance\x18\x03 \x01(\x01R\bdistance\x12\x1d\n" +
+	"PlanetCord\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
+	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\x12\x1a\n" +
+	"\blatitude\x18\x03 \x01(\x01R\blatitude\x12\x1a\n" +
+	"\bdistance\x18\x04 \x01(\x01R\bdistance\x12\x1d\n" +
 	"\n" +
-	"speed_long\x18\x04 \x01(\x01R\tspeedLong\x12\x1b\n" +
-	"\tspeed_lat\x18\x05 \x01(\x01R\bspeedLat\x12\x1d\n" +
+	"speed_long\x18\x05 \x01(\x01R\tspeedLong\x12\x1b\n" +
+	"\tspeed_lat\x18\x06 \x01(\x01R\bspeedLat\x12\x1d\n" +
 	"\n" +
-	"speed_dist\x18\x06 \x01(\x01R\tspeedDist\x12-\n" +
-	"\rlongitude_dms\x18\a \x01(\v2\b.swe.DMSR\flongitudeDms\x12+\n" +
-	"\flatitude_dms\x18\b \x01(\v2\b.swe.DMSR\vlatitudeDms\x12.\n" +
-	"\x0espeed_long_dms\x18\t \x01(\v2\b.swe.DMSR\fspeedLongDms\x12\x12\n" +
-	"\x04sign\x18\n" +
-	" \x01(\tR\x04sign\x120\n" +
-	"\tnakshatra\x18\v \x01(\v2\x12.swe.NakshatraPadaR\tnakshatra\x12\x19\n" +
-	"\bis_retro\x18\f \x01(\bR\aisRetro\"\x93\x01\n" +
+	"speed_dist\x18\a \x01(\x01R\tspeedDist\x12%\n" +
+	"\x0espeed_category\x18\b \x01(\tR\rspeedCategory\x12\x14\n" +
+	"\x05vedha\x18\t \x01(\tR\x05vedha\x12-\n" +
+	"\rlongitude_dms\x18\n" +
+	" \x01(\v2\b.swe.DMSR\flongitudeDms\x12+\n" +
+	"\flatitude_dms\x18\v \x01(\v2\b.swe.DMSR\vlatitudeDms\x12.\n" +
+	"\x0espeed_long_dms\x18\f \x01(\v2\b.swe.DMSR\fspeedLongDms\x12\x12\n" +
+	"\x04sign\x18\r \x01(\tR\x04sign\x120\n" +
+	"\tnakshatra\x18\x0e \x01(\v2\x12.swe.NakshatraPadaR\tnakshatra\x12\x19\n" +
+	"\bis_retro\x18\x0f \x01(\bR\aisRetro\x12\x1b\n" +
+	"\tsign_lord\x18\x10 \x01(\tR\bsignLord\x12#\n" +
+	"\rsign_lordship\x18\x11 \x01(\tR\fsignLordship\"\x93\x01\n" +
 	"\vPosResponse\x127\n" +
 	"\aresults\x18\x01 \x03(\v2\x1d.swe.PosResponse.ResultsEntryR\aresults\x1aK\n" +
 	"\fResultsEntry\x12\x10\n" +
@@ -766,13 +983,30 @@ const file_swe_proto_rawDesc = "" +
 	"\rTithyResponse\x12\x14\n" +
 	"\x05tithy\x18\x01 \x01(\x05R\x05tithy\x12\x1c\n" +
 	"\tnakshatra\x18\x02 \x01(\tR\tnakshatra\x12\x18\n" +
-	"\aweekday\x18\x03 \x01(\tR\aweekday2\xdc\x01\n" +
+	"\aweekday\x18\x03 \x01(\tR\aweekday\",\n" +
+	"\fBalasRequest\x12\x1c\n" +
+	"\ttimestamp\x18\x01 \x01(\tR\ttimestamp\"\xd9\x01\n" +
+	"\vPlanetBalas\x12%\n" +
+	"\x05cords\x18\x01 \x01(\v2\x0f.swe.PlanetCordR\x05cords\x12\x1b\n" +
+	"\tuday_bala\x18\x02 \x01(\x01R\budayBala\x12\x1f\n" +
+	"\vuchcha_bala\x18\x03 \x01(\x01R\n" +
+	"uchchaBala\x12\x1d\n" +
+	"\n" +
+	"vakra_bala\x18\x04 \x01(\x01R\tvakraBala\x12!\n" +
+	"\fkshetra_bala\x18\x05 \x01(\x01R\vkshetraBala\x12#\n" +
+	"\rnavamsha_bala\x18\x06 \x01(\x01R\fnavamshaBala\"\x98\x01\n" +
+	"\rBalasResponse\x129\n" +
+	"\aresults\x18\x01 \x03(\v2\x1f.swe.BalasResponse.ResultsEntryR\aresults\x1aL\n" +
+	"\fResultsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12&\n" +
+	"\x05value\x18\x02 \x01(\v2\x10.swe.PlanetBalasR\x05value:\x028\x012\x8f\x02\n" +
 	"\n" +
 	"EphService\x12+\n" +
 	"\x04Ping\x12\x10.swe.PingRequest\x1a\x11.swe.PingResponse\x12+\n" +
 	"\x06GetPos\x12\x0f.swe.PosRequest\x1a\x10.swe.PosResponse\x12D\n" +
 	"\x0fFindConjunction\x12\x17.swe.ConjunctionRequest\x1a\x18.swe.ConjunctionResponse\x12.\n" +
-	"\x05Tithy\x12\x11.swe.TithyRequest\x1a\x12.swe.TithyResponseBe\n" +
+	"\x05Tithy\x12\x11.swe.TithyRequest\x1a\x12.swe.TithyResponse\x121\n" +
+	"\bGetBalas\x12\x11.swe.BalasRequest\x1a\x12.swe.BalasResponseBe\n" +
 	"\acom.sweB\bSweProtoP\x01Z$github.com/jenujari/go-swe-api/proto\xa2\x02\x03SXX\xaa\x02\x03Swe\xca\x02\x03Swe\xe2\x02\x0fSwe\\GPBMetadata\xea\x02\x03Sweb\x06proto3"
 
 var (
@@ -787,7 +1021,7 @@ func file_swe_proto_rawDescGZIP() []byte {
 	return file_swe_proto_rawDescData
 }
 
-var file_swe_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_swe_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_swe_proto_goTypes = []any{
 	(*PingRequest)(nil),         // 0: swe.PingRequest
 	(*PingResponse)(nil),        // 1: swe.PingResponse
@@ -800,28 +1034,37 @@ var file_swe_proto_goTypes = []any{
 	(*ConjunctionResponse)(nil), // 8: swe.ConjunctionResponse
 	(*TithyRequest)(nil),        // 9: swe.TithyRequest
 	(*TithyResponse)(nil),       // 10: swe.TithyResponse
-	nil,                         // 11: swe.PosResponse.ResultsEntry
+	(*BalasRequest)(nil),        // 11: swe.BalasRequest
+	(*PlanetBalas)(nil),         // 12: swe.PlanetBalas
+	(*BalasResponse)(nil),       // 13: swe.BalasResponse
+	nil,                         // 14: swe.PosResponse.ResultsEntry
+	nil,                         // 15: swe.BalasResponse.ResultsEntry
 }
 var file_swe_proto_depIdxs = []int32{
 	3,  // 0: swe.PlanetCord.longitude_dms:type_name -> swe.DMS
 	3,  // 1: swe.PlanetCord.latitude_dms:type_name -> swe.DMS
 	3,  // 2: swe.PlanetCord.speed_long_dms:type_name -> swe.DMS
 	4,  // 3: swe.PlanetCord.nakshatra:type_name -> swe.NakshatraPada
-	11, // 4: swe.PosResponse.results:type_name -> swe.PosResponse.ResultsEntry
-	5,  // 5: swe.PosResponse.ResultsEntry.value:type_name -> swe.PlanetCord
-	0,  // 6: swe.EphService.Ping:input_type -> swe.PingRequest
-	2,  // 7: swe.EphService.GetPos:input_type -> swe.PosRequest
-	7,  // 8: swe.EphService.FindConjunction:input_type -> swe.ConjunctionRequest
-	9,  // 9: swe.EphService.Tithy:input_type -> swe.TithyRequest
-	1,  // 10: swe.EphService.Ping:output_type -> swe.PingResponse
-	6,  // 11: swe.EphService.GetPos:output_type -> swe.PosResponse
-	8,  // 12: swe.EphService.FindConjunction:output_type -> swe.ConjunctionResponse
-	10, // 13: swe.EphService.Tithy:output_type -> swe.TithyResponse
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	14, // 4: swe.PosResponse.results:type_name -> swe.PosResponse.ResultsEntry
+	5,  // 5: swe.PlanetBalas.cords:type_name -> swe.PlanetCord
+	15, // 6: swe.BalasResponse.results:type_name -> swe.BalasResponse.ResultsEntry
+	5,  // 7: swe.PosResponse.ResultsEntry.value:type_name -> swe.PlanetCord
+	12, // 8: swe.BalasResponse.ResultsEntry.value:type_name -> swe.PlanetBalas
+	0,  // 9: swe.EphService.Ping:input_type -> swe.PingRequest
+	2,  // 10: swe.EphService.GetPos:input_type -> swe.PosRequest
+	7,  // 11: swe.EphService.FindConjunction:input_type -> swe.ConjunctionRequest
+	9,  // 12: swe.EphService.Tithy:input_type -> swe.TithyRequest
+	11, // 13: swe.EphService.GetBalas:input_type -> swe.BalasRequest
+	1,  // 14: swe.EphService.Ping:output_type -> swe.PingResponse
+	6,  // 15: swe.EphService.GetPos:output_type -> swe.PosResponse
+	8,  // 16: swe.EphService.FindConjunction:output_type -> swe.ConjunctionResponse
+	10, // 17: swe.EphService.Tithy:output_type -> swe.TithyResponse
+	13, // 18: swe.EphService.GetBalas:output_type -> swe.BalasResponse
+	14, // [14:19] is the sub-list for method output_type
+	9,  // [9:14] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_swe_proto_init() }
@@ -835,7 +1078,7 @@ func file_swe_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_swe_proto_rawDesc), len(file_swe_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

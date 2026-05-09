@@ -8,6 +8,7 @@ import (
 	"time"
 
 	baselib "github.com/jenujari/planets-lib"
+	bal "github.com/jenujari/planets-lib/bal"
 	swelib "github.com/mshafiee/swephgo"
 )
 
@@ -268,6 +269,84 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 	planetCord.SpeedLong = xp[3]
 	planetCord.SpeedLat = xp[4]
 	planetCord.SpeedDist = xp[5]
+	planetCord.Name = planet
 
 	return planetCord, nil
+}
+
+// computePlanetBalas calculates all bala values for a single planet and returns
+// the assembled PlanetBalas struct. sunLong is required because UdayBal is
+// relative to the Sun's longitude.
+func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet string) (PlanetBalas, error) {
+	cords.CalculateDerivedValues()
+
+	kshetraBala, err := bal.KshetraBal(cords.Longitude, planet)
+	if err != nil {
+		return PlanetBalas{}, fmt.Errorf("%s: KshetraBal: %w", planet, err)
+	}
+
+	navamshaBala, err := bal.NavanshBal(cords.Longitude, planet)
+	if err != nil {
+		return PlanetBalas{}, fmt.Errorf("%s: NavanshBal: %w", planet, err)
+	}
+
+	return PlanetBalas{
+		Cords:        cords,
+		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.SpeedLong, planet),
+		UchchaBala:   bal.UchhBal(cords.Longitude, planet),
+		VakraBala:    bal.VakraBal(cords.SpeedLong, planet),
+		KshetraBala:  kshetraBala,
+		NavamshaBala: navamshaBala,
+	}, nil
+}
+
+// planets processed by GetAllPlanetsBalas (excludes outer planets).
+var balaPlanets = []string{
+	baselib.SUN,
+	baselib.MOON,
+	baselib.MERCURY,
+	baselib.VENUS,
+	baselib.MARS,
+	baselib.JUPITER,
+	baselib.SATURN,
+	baselib.RAHU,
+	baselib.KETU,
+}
+
+// GetAllPlanetsBalas computes positional coordinates and Shadbala components
+// (Uday, Uchcha, Vakra, Kshetra, Navamsha) for the nine Vedic planets at the
+// given UTC timestamp.
+func GetAllPlanetsBalas(utcTime time.Time) (map[string]PlanetBalas, error) {
+	jd, err := UTCToSiderealTime(utcTime)
+	if err != nil {
+		return nil, err
+	}
+
+	// Sun must be computed first — UdayBal for every other planet is relative
+	// to the Sun's longitude.
+	sunCords, err := GetPlanetCalculation(jd, baselib.SUN)
+	if err != nil {
+		return nil, err
+	}
+
+	mapPlanets := make(map[string]PlanetBalas, len(balaPlanets))
+
+	for _, planet := range balaPlanets {
+		cords := sunCords
+		if planet != baselib.SUN {
+			cords, err = GetPlanetCalculation(jd, planet)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		pb, err := computePlanetBalas(sunCords.Longitude, cords, planet)
+		if err != nil {
+			return nil, err
+		}
+
+		mapPlanets[planet] = pb
+	}
+
+	return mapPlanets, nil
 }
