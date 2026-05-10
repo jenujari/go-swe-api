@@ -20,13 +20,14 @@ pipeline {
 
         stage('check branch test') {
             steps {
+              def branch = env.GIT_BRANCH?.replace("origin/", "")
+              echo "branch=$branch"
+
               sh '''
                 echo "BRANCH_NAME=$BRANCH_NAME"
                 echo "GIT_BRANCH=$GIT_BRANCH"
                 echo "CHANGE_BRANCH=$CHANGE_BRANCH"
-                echo "BRANCH_NAME=${env.BRANCH_NAME}"
-                echo "GIT_BRANCH=${env.GIT_BRANCH}"
-                echo "CHANGE_BRANCH=${env.CHANGE_BRANCH}"
+                echo "branch=$branch"
               '''
 
               error "hard stop"
