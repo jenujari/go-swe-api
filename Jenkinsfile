@@ -19,7 +19,8 @@ pipeline {
         }
 
         stage('check branch test') {
-            steps {
+          steps {
+            script {
               def branch = env.GIT_BRANCH?.replace("origin/", "")
               echo "branch=$branch"
 
@@ -32,6 +33,7 @@ pipeline {
 
               error "hard stop"
             }
+          }
         }
 
         stage('Build for Tests') {
