@@ -24,9 +24,12 @@ pipeline {
                 echo "BRANCH_NAME=$BRANCH_NAME"
                 echo "GIT_BRANCH=$GIT_BRANCH"
                 echo "CHANGE_BRANCH=$CHANGE_BRANCH"
+                echo "BRANCH_NAME=${env.BRANCH_NAME}"
+                echo "GIT_BRANCH=${env.GIT_BRANCH}"
+                echo "CHANGE_BRANCH=${env.CHANGE_BRANCH}"
               '''
 
-              error "BRANCH_NAME=$BRANCH_NAME, GIT_BRANCH=$GIT_BRANCH, CHANGE_BRANCH=$CHANGE_BRANCH"
+              error "hard stop"
             }
         }
 
