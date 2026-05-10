@@ -18,6 +18,18 @@ pipeline {
             }
         }
 
+        stage('check branch test') {
+            steps {
+              sh '''
+                echo "BRANCH_NAME=$BRANCH_NAME"
+                echo "GIT_BRANCH=$GIT_BRANCH"
+                echo "CHANGE_BRANCH=$CHANGE_BRANCH"
+              '''
+
+              error "BRANCH_NAME=$BRANCH_NAME, GIT_BRANCH=$GIT_BRANCH, CHANGE_BRANCH=$CHANGE_BRANCH"
+            }
+        }
+
         stage('Build for Tests') {
             steps {
                 sh '''
@@ -85,11 +97,18 @@ pipeline {
                     ).trim()
 
                     env.IMAGE_TAG = SHORT_SHA
+
+                    echo "Image tag set to: $IMAGE_TAG"
                 }
             }
         }
 
         stage('Build Podman Image') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 sh """
                     podman build -t $IMAGE_NAME:$SHORT_SHA .
@@ -99,6 +118,11 @@ pipeline {
         }
 
         stage('Docker Login') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 withCredentials([
                     usernamePassword(
@@ -107,14 +131,17 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
-                    sh """
-                        echo $DOCKER_PASS | podman login docker.io -u $DOCKER_USER --password-stdin
-                    """
+                    sh 'echo $DOCKER_PASS | podman login docker.io -u $DOCKER_USER --password-stdin'
                 }
             }
         }
 
         stage('Push Docker Image') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 sh """
                     podman push $IMAGE_NAME:$SHORT_SHA
@@ -124,6 +151,11 @@ pipeline {
         }
 
         stage('Update Kubernetes Deployment') {
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 sh """
                     kubectl set image deployment/sweapi \
