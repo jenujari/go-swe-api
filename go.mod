@@ -2,6 +2,11 @@ module github.com/jenujari/go-swe-api
 
 go 1.25.6
 
+tool (
+	github.com/goforj/godump
+	github.com/golangci/golangci-lint/cmd/golangci-lint
+)
+
 require (
 	github.com/goforj/godump v1.9.0
 	github.com/golangci/golangci-lint v1.64.8
