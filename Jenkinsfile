@@ -18,24 +18,6 @@ pipeline {
             }
         }
 
-        stage('check branch test') {
-          steps {
-            script {
-              def branch = env.GIT_BRANCH?.replace("origin/", "")
-              echo "branch=$branch"
-
-              sh '''
-                echo "BRANCH_NAME=$BRANCH_NAME"
-                echo "GIT_BRANCH=$GIT_BRANCH"
-                echo "CHANGE_BRANCH=$CHANGE_BRANCH"
-                echo "branch=$branch"
-              '''
-
-              error "hard stop"
-            }
-          }
-        }
-
         stage('Build for Tests') {
             steps {
                 sh '''
@@ -67,12 +49,8 @@ pipeline {
         stage('Validate branch is main before build') {
             steps {
                 script {
-
-                    // GitHub webhook branch
-                    def branch = env.BRANCH_NAME ?: sh(
-                        script: "git rev-parse --abbrev-ref HEAD",
-                        returnStdout: true
-                    ).trim()
+                    def branch = env.GIT_BRANCH?.replace("origin/", "")
+                    env.BRANCH_NAME = branch
 
                     echo "Triggered branch: ${branch}"
 
