@@ -231,7 +231,7 @@ func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
 func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetCord, error) {
 	var xp = make([]float64, 6)
 	var serr = make([]byte, 1000)
-	var isKetu bool = false
+	var isKetu = false
 
 	if planet == "Ketu" {
 		isKetu = true
@@ -292,7 +292,7 @@ func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet strin
 
 	return PlanetBalas{
 		Cords:        cords,
-		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.SpeedLong, planet),
+		UdayBala:     bal.UdayBal(sunLong, cords.Longitude, cords.IsRetro, planet),
 		UchchaBala:   bal.UchhBal(cords.Longitude, planet),
 		VakraBala:    bal.VakraBal(cords.SpeedLong, planet),
 		KshetraBala:  kshetraBala,

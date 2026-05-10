@@ -180,6 +180,8 @@ func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 		IsRetro:      pc.IsRetro,
 		SignLord:     pc.SignLord,
 		SignLordship: pc.SignLordship,
+		NavamsaSign:  pc.NavamsaSign,
+		Vargottama:   pc.Vargottama,
 	}
 }
 

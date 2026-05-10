@@ -65,7 +65,7 @@ func TestEphServiceClient(t *testing.T) {
 		conn:   conn,
 		client: pb.NewEphServiceClient(conn),
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	t.Run("Ping", func(t *testing.T) {
 		resp, err := client.Ping(t.Context())
@@ -108,6 +108,9 @@ func TestEphServiceClient(t *testing.T) {
 		assert.Equal(t, "left-vedha", sun.Cords.Vedha)
 		assert.Equal(t, "Saturn", sun.Cords.SignLord)
 		assert.Equal(t, "Enemy", sun.Cords.SignLordship)
+		assert.NotEmpty(t, sun.Cords.NavamsaSign)
+		// Vargottama is boolean, so we just assert it doesn't panic
+		_ = sun.Cords.Vargottama
 	})
 }
 
@@ -139,7 +142,7 @@ func TestFindConjunction(t *testing.T) {
 		conn:   conn,
 		client: pb.NewEphServiceClient(conn),
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 
 	resp, err := client.FindConjunction(
 		t.Context(),

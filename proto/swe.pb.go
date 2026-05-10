@@ -308,6 +308,8 @@ type PlanetCord struct {
 	IsRetro       bool                   `protobuf:"varint,15,opt,name=is_retro,json=isRetro,proto3" json:"is_retro,omitempty"`
 	SignLord      string                 `protobuf:"bytes,16,opt,name=sign_lord,json=signLord,proto3" json:"sign_lord,omitempty"`
 	SignLordship  string                 `protobuf:"bytes,17,opt,name=sign_lordship,json=signLordship,proto3" json:"sign_lordship,omitempty"`
+	NavamsaSign   string                 `protobuf:"bytes,18,opt,name=navamsa_sign,json=navamsaSign,proto3" json:"navamsa_sign,omitempty"`
+	Vargottama    bool                   `protobuf:"varint,19,opt,name=vargottama,proto3" json:"vargottama,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -459,6 +461,20 @@ func (x *PlanetCord) GetSignLordship() string {
 		return x.SignLordship
 	}
 	return ""
+}
+
+func (x *PlanetCord) GetNavamsaSign() string {
+	if x != nil {
+		return x.NavamsaSign
+	}
+	return ""
+}
+
+func (x *PlanetCord) GetVargottama() bool {
+	if x != nil {
+		return x.Vargottama
+	}
+	return false
 }
 
 type PosResponse struct {
@@ -940,7 +956,7 @@ const file_swe_proto_rawDesc = "" +
 	"\x01s\x18\x04 \x01(\x02R\x01s\"7\n" +
 	"\rNakshatraPada\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x12\n" +
-	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\xbd\x04\n" +
+	"\x04pada\x18\x02 \x01(\x05R\x04pada\"\x80\x05\n" +
 	"\n" +
 	"PlanetCord\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
@@ -962,7 +978,11 @@ const file_swe_proto_rawDesc = "" +
 	"\tnakshatra\x18\x0e \x01(\v2\x12.swe.NakshatraPadaR\tnakshatra\x12\x19\n" +
 	"\bis_retro\x18\x0f \x01(\bR\aisRetro\x12\x1b\n" +
 	"\tsign_lord\x18\x10 \x01(\tR\bsignLord\x12#\n" +
-	"\rsign_lordship\x18\x11 \x01(\tR\fsignLordship\"\x93\x01\n" +
+	"\rsign_lordship\x18\x11 \x01(\tR\fsignLordship\x12!\n" +
+	"\fnavamsa_sign\x18\x12 \x01(\tR\vnavamsaSign\x12\x1e\n" +
+	"\n" +
+	"vargottama\x18\x13 \x01(\bR\n" +
+	"vargottama\"\x93\x01\n" +
 	"\vPosResponse\x127\n" +
 	"\aresults\x18\x01 \x03(\v2\x1d.swe.PosResponse.ResultsEntryR\aresults\x1aK\n" +
 	"\fResultsEntry\x12\x10\n" +
