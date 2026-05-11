@@ -59,7 +59,7 @@ pipeline {
                         currentBuild.result = 'NOT_BUILT'
 
                         echo """
-                        Skipping pipeline.
+                        Skipping futher build steps in pipeline.
                         Push detected on non-main branch:
                         ${branch}
                         """
