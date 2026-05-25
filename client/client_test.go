@@ -105,7 +105,7 @@ func TestEphServiceClient(t *testing.T) {
 		// Verify some of the new fields added to PlanetCord
 		assert.Equal(t, "Sun", sun.Cords.Name)
 		assert.Equal(t, "ati-sheeghra", sun.Cords.SpeedCategory)
-		assert.Equal(t, "left-vedha", sun.Cords.Vedha)
+		assert.Equal(t, "left", sun.Cords.Vedha)
 		assert.Equal(t, "Saturn", sun.Cords.SignLord)
 		assert.Equal(t, "Enemy", sun.Cords.SignLordship)
 		assert.NotEmpty(t, sun.Cords.NavamsaSign)
