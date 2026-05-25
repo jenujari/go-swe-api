@@ -183,8 +183,8 @@ pipeline {
             ])
 
             recordCoverage(
-                tools: [ golang(pattern: 'coverage.out') ],
-                sourceCodeRetention: 'EVERY_BUILD'
+                sourceCodeRetention: 'EVERY_BUILD',
+                tools: [[parser: 'GO_COV', pattern: 'coverage.out']]
             )
 
             cleanWs()
