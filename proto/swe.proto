@@ -57,6 +57,7 @@ message PlanetCord {
   string        sign_lordship  = 17;
   string        navamsa_sign   = 18;
   bool          vargottama     = 19;
+  string        vedha_target   = 20;
 }
 
 message PosResponse {

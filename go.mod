@@ -1,6 +1,6 @@
 module github.com/jenujari/go-swe-api
 
-go 1.25.6
+go 1.26.4
 
 tool (
 	github.com/goforj/godump
@@ -8,7 +8,7 @@ tool (
 )
 
 require (
-	github.com/jenujari/planets-lib v0.0.0-20260525182705-33551ad3690a
+	github.com/jenujari/planets-lib v1.0.0
 	github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3
 	github.com/mshafiee/swephgo v1.1.0
 	github.com/spf13/viper v1.21.0

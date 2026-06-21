@@ -92,4 +92,5 @@ func TestGRPC_GetBalas(t *testing.T) {
 	assert.NotNil(t, sun)
 	assert.InDelta(t, 100.0, sun.UdayBala, 0.001)
 	assert.Equal(t, "Sun", sun.Cords.Name)
+	assert.Equal(t, "Purva Bhadrapada", sun.Cords.VedhaTarget)
 }

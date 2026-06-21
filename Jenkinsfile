@@ -18,6 +18,20 @@ pipeline {
             }
         }
 
+        stage('DHI Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: "${REGISTRY_CREDENTIALS}",
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh 'echo $DOCKER_PASS | podman login dhi.io -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
         stage('Build for Tests') {
             steps {
                 sh '''
@@ -143,9 +157,9 @@ pipeline {
             steps {
                 sh """
                     kubectl set image deployment/sweapi \
-                    sweapi=$IMAGE_NAME:latest
+                    sweapi=$IMAGE_NAME:$SHORT_SHA
 
-                    kubectl rollout status deployment/sweapi
+                    kubectl rollout restart deployment/sweapi
                 """
             }
         }

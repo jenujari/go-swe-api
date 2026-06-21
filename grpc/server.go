@@ -182,6 +182,7 @@ func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
 		SignLordship: pc.SignLordship,
 		NavamsaSign:  pc.NavamsaSign,
 		Vargottama:   pc.Vargottama,
+		VedhaTarget:  pc.VedhaTarget,
 	}
 }
 

@@ -313,8 +313,8 @@ github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSo
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
-github.com/jenujari/planets-lib v0.0.0-20260525182705-33551ad3690a h1:bXooZ18jtqEm81wOgoOeD/AyFSY63nZjmMKwPgtzB78=
-github.com/jenujari/planets-lib v0.0.0-20260525182705-33551ad3690a/go.mod h1:6u6GX0QxIFzebvVqoT2amXFxlhyrDIVgt0ORmjmx7QQ=
+github.com/jenujari/planets-lib v1.0.0 h1:qo0cRCWoJ2FhcDwqcJInXDIdtb3CwQ6S4HeCmFR0gKM=
+github.com/jenujari/planets-lib v1.0.0/go.mod h1:THjjjVhrHwtCUO80V1xPBeqJB0QlRAQU3vRf/BoOhWo=
 github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3 h1:t52wCeqMH7OZC/2HvZ+L1FZEossEiLTcL5k9Lt6EndU=
 github.com/jenujari/runtime-context v0.0.0-20250912231647-fa052a1c1da3/go.mod h1:r8v8RMr4jW+eUa4XopKvk3jAZlUKAMchwIJ3KRSPfq8=
 github.com/jgautheron/goconst v1.7.1 h1:VpdAG7Ca7yvvJk5n8dMwQhfEZJh95kl/Hl9S1OI5Jkk=

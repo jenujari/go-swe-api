@@ -1,4 +1,4 @@
-FROM golang:1.25.6-alpine3.23 AS builder
+FROM dhi.io/golang:1.26.4-alpine3.24-dev AS builder
 
 RUN apk add --no-cache build-base
 
@@ -18,7 +18,7 @@ COPY . .
 
 RUN go build -o sweAPI main.go
 
-FROM alpine:3.23
+FROM dhi.io/alpine-base:3.24
 
 COPY --from=docker.io/jhon5456/sweph-build-base:v1 /usr/local/lib/libswe.so /usr/local/lib/libswe.so
 COPY --from=docker.io/jhon5456/sweph-build-base:v1 /usr/local/lib/ephe /usr/local/lib/ephe

@@ -1,4 +1,4 @@
-FROM golang:1.25.6-alpine3.23
+FROM dhi.io/golang:1.26.4-alpine3.24-dev
 
 RUN apk add --no-cache build-base git
 

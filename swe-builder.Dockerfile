@@ -1,4 +1,4 @@
-FROM alpine:3.23
+FROM dhi.io/alpine-base:3.24-alpine3.24-dev
 
 ARG SWISSEPH_REF=master
 ENV LD_LIBRARY_PATH=/usr/local/lib
