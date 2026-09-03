@@ -19,8 +19,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o sweAPI main.go \
-    && ldd sweAPI
+RUN go build -trimpath -ldflags="-s -w" -o /app/sweAPI . \
+    && ldd /app/sweAPI
 
 FROM dhi.io/alpine-base:3.24@sha256:aa2aa13f40cfc9e17296ba19e64d9439f040fc5f01e4b29d81661ef7063e4e46
 
