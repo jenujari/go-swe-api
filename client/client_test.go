@@ -78,6 +78,9 @@ func TestEphServiceClient(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, resp)
 		assert.Contains(t, resp.Results, "Sun")
+		sun := resp.Results["Sun"]
+		assert.Equal(t, "left", sun.Vedha)
+		assert.Equal(t, "Dhanishtha", sun.VedhaTarget)
 	})
 
 	t.Run("Tithy", func(t *testing.T) {

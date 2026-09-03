@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net"
+	"sync"
 	"testing"
 
 	"github.com/jenujari/go-swe-api/grpc"
@@ -15,17 +16,22 @@ import (
 
 const bufSize = 1024 * 1024
 
-var lis *bufconn.Listener
+var (
+	lis          *bufconn.Listener
+	testGRPCOnce sync.Once
+)
 
 func initTestGRPC() {
-	lis = bufconn.Listen(bufSize)
-	s := googlegrpc.NewServer()
-	pb.RegisterEphServiceServer(s, &grpc.Server{})
-	go func() {
-		if err := s.Serve(lis); err != nil {
-			panic(err)
-		}
-	}()
+	testGRPCOnce.Do(func() {
+		lis = bufconn.Listen(bufSize)
+		s := googlegrpc.NewServer()
+		pb.RegisterEphServiceServer(s, &grpc.Server{})
+		go func() {
+			if err := s.Serve(lis); err != nil {
+				panic(err)
+			}
+		}()
+	})
 }
 
 func bufDialer(context.Context, string) (net.Conn, error) {
@@ -49,7 +55,7 @@ func TestGRPC_Ping(t *testing.T) {
 }
 
 func TestGRPC_GetPos(t *testing.T) {
-	// initTestGRPC() // Already initialized if running all tests, but better safe.
+	initTestGRPC()
 	ctx := context.Background()
 	conn, err := googlegrpc.NewClient("passthrough:///bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -69,9 +75,13 @@ func TestGRPC_GetPos(t *testing.T) {
 	assert.True(t, ok)
 	assert.NotNil(t, sun)
 	assert.InDelta(t, 281.808299, sun.Longitude, 0.001)
+	assert.Equal(t, "left", sun.Vedha)
+	assert.Equal(t, "Shravana", sun.Nakshatra.GetName())
+	assert.Equal(t, "Dhanishtha", sun.VedhaTarget)
 }
 
 func TestGRPC_GetBalas(t *testing.T) {
+	initTestGRPC()
 	ctx := context.Background()
 	conn, err := googlegrpc.NewClient("passthrough:///bufnet", googlegrpc.WithContextDialer(bufDialer), googlegrpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
