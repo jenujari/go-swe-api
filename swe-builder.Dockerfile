@@ -1,10 +1,9 @@
-FROM docker.io/library/alpine:3.24@sha256:79ff19e9084a00eece421b2523fb93e22d730e2c0e525905de047e848e56d95f
+FROM docker.io/library/alpine:3.24@sha256:79ff19e9084a00eece421b2523fb93e22d730e2c0e525905de047e848e56d95f AS build
 
 # libswe ABI must match swephgo's vendored 2.10.03 headers.
 ARG SWISSEPH_REF=v2.10.03
 # Ephemeris data files are not in the v2.10.03 tag; pin the commit that ships them.
 ARG SWISSEPH_EPHE_REF=3fd0f956d73898b91cc4f67cf18b21af656d1342
-ENV LD_LIBRARY_PATH=/usr/local/lib
 
 WORKDIR /swisseph
 
@@ -20,6 +19,14 @@ RUN apk add --no-cache build-base git \
     && git -C /tmp/swe-ephe fetch --depth 1 origin "${SWISSEPH_EPHE_REF}" \
     && git -C /tmp/swe-ephe checkout FETCH_HEAD \
     && mkdir -p /usr/local/lib/ephe \
-    && cp -a /tmp/swe-ephe/ephe/. /usr/local/lib/ephe/ \
+    && cp -a /tmp/swe-ephe/ephe/sepl*.se1 /tmp/swe-ephe/ephe/semo*.se1 /tmp/swe-ephe/ephe/seas*.se1 \
+        /tmp/swe-ephe/ephe/sefstars.txt /usr/local/lib/ephe/ \
     && cp -f seleapsec.txt /usr/local/lib/ephe/ \
     && rm -rf /tmp/swe-ephe
+
+FROM docker.io/library/alpine:3.24@sha256:79ff19e9084a00eece421b2523fb93e22d730e2c0e525905de047e848e56d95f
+
+ENV LD_LIBRARY_PATH=/usr/local/lib
+
+COPY --from=build /usr/local/lib/libswe.so /usr/local/lib/libswe.so
+COPY --from=build /usr/local/lib/ephe /usr/local/lib/ephe
