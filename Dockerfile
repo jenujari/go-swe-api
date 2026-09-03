@@ -20,7 +20,7 @@ RUN go mod download
 COPY . .
 
 RUN go build -trimpath -ldflags="-s -w" -o /app/sweAPI . \
-    && ldd /app/sweAPI
+    && /lib/ld-musl-$(uname -m).so.1 --list /app/sweAPI
 
 FROM dhi.io/alpine-base:3.24@sha256:aa2aa13f40cfc9e17296ba19e64d9439f040fc5f01e4b29d81661ef7063e4e46
 
@@ -31,8 +31,9 @@ ENV SWISSEPH_PATH=/usr/local/lib/ephe
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 WORKDIR /app
-COPY --from=builder /app/sweAPI ./
-COPY config/conf.yml config/conf.yml
+COPY --from=builder --chown=65532:65532 /app/sweAPI /app/sweAPI
+COPY --chown=65532:65532 config/conf.yml /app/config/conf.yml
 
 EXPOSE 5678
+USER 65532
 ENTRYPOINT ["/app/sweAPI"]
