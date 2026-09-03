@@ -167,6 +167,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 		SpeedDist     float64
 		SpeedCategory string
 		Vedha         string
+		VedhaTarget   string
 		Sign          string
 		NakshatraName string
 		NakshatraPada int
@@ -181,7 +182,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 0.293985, NavamshaBala: 2.645866,
 			Longitude: 270.176391, Latitude: -0.000147, Distance: 0.983651,
 			SpeedLong: 1.018798, SpeedLat: -0.000002, SpeedDist: 0.000059,
-			SpeedCategory: "ati-sheeghra", Vedha: "left",
+			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", NakshatraPada: 2,
 			IsRetro: false, SignLord: "Saturn", SignLordship: "Enemy",
 		},
@@ -190,7 +191,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 42.685071, NavamshaBala: 15.834358,
 			Longitude: 222.805521, Latitude: -5.117864, Distance: 0.002708,
 			SpeedLong: 11.885197, SpeedLat: -0.056361, SpeedDist: -0.000005,
-			SpeedCategory: "ati-mand", Vedha: "front",
+			SpeedCategory: "ati-mand", Vedha: "front", VedhaTarget: "Ashlesha",
 			Sign: "Scorpio", NakshatraName: "Anuradha", NakshatraPada: 3,
 			IsRetro: false, SignLord: "Mars", SignLordship: "Neutral",
 		},
@@ -199,7 +200,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 14.271452, NavamshaBala: 28.443066,
 			Longitude: 265.718564, Latitude: -1.758376, Distance: 1.430360,
 			SpeedLong: 1.616813, SpeedLat: -0.060251, SpeedDist: 0.000222,
-			SpeedCategory: "sheeghra", Vedha: "front",
+			SpeedCategory: "sheeghra", Vedha: "front", VedhaTarget: "Ardra",
 			Sign: "Sagittarius", NakshatraName: "Purva Ashadha", NakshatraPada: 4,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Neutral",
 		},
@@ -208,7 +209,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 10.299744, NavamshaBala: 57.302308,
 			Longitude: 272.059949, Latitude: -0.966153, Distance: 1.710186,
 			SpeedLong: 1.257624, SpeedLat: -0.029822, SpeedDist: -0.000244,
-			SpeedCategory: "ati-sheeghra", Vedha: "left",
+			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", NakshatraPada: 3,
 			IsRetro: false, SignLord: "Saturn", SignLordship: "Friend",
 		},
@@ -217,7 +218,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 5.362313, NavamshaBala: 48.260821,
 			Longitude: 268.927537, Latitude: -0.968436, Distance: 2.398485,
 			SpeedLong: 0.774910, SpeedLat: -0.005088, SpeedDist: -0.001005,
-			SpeedCategory: "ati-sheeghra", Vedha: "left",
+			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Sagittarius", NakshatraName: "Uttara Ashadha", NakshatraPada: 1,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Friend",
 		},
@@ -226,7 +227,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 7.803136, NavamshaBala: 20.228221,
 			Longitude: 85.318119, Latitude: 0.270673, Distance: 4.236052,
 			SpeedLong: -0.134102, SpeedLat: 0.002190, SpeedDist: 0.001661,
-			SpeedCategory: "kutil", Vedha: "right",
+			SpeedCategory: "kutil", Vedha: "right", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Gemini", NakshatraName: "Punarvasu", NakshatraPada: 2,
 			IsRetro: true, SignLord: "Mercury", SignLordship: "Enemy",
 		},
@@ -235,7 +236,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 9.574330, NavamshaBala: 6.915513,
 			Longitude: 332.872299, Latitude: -2.217048, Distance: 9.925046,
 			SpeedLong: 0.077886, SpeedLat: 0.002854, SpeedDist: 0.014745,
-			SpeedCategory: "sama", Vedha: "front",
+			SpeedCategory: "sama", Vedha: "front", VedhaTarget: "Chitra",
 			Sign: "Pisces", NakshatraName: "Purva Bhadrapada", NakshatraPada: 4,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Neutral",
 		},
@@ -244,7 +245,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 21.284016, NavamshaBala: 8.443853,
 			Longitude: 317.229590, Latitude: 0.000000, Distance: 0.002570,
 			SpeedLong: -0.052992, SpeedLat: 0.000000, SpeedDist: -0.000000,
-			SpeedCategory: "vakra", Vedha: "left",
+			SpeedCategory: "vakra", Vedha: "left", VedhaTarget: "Pushya",
 			Sign: "Aquarius", NakshatraName: "Shatabhisha", NakshatraPada: 4,
 			IsRetro: true, SignLord: "Saturn", SignLordship: "Enemy",
 		},
@@ -253,7 +254,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			KshetraBala: 21.284016, NavamshaBala: 8.443853,
 			Longitude: 137.229590, Latitude: 0.000000, Distance: 0.002570,
 			SpeedLong: -0.052992, SpeedLat: 0.000000, SpeedDist: -0.000000,
-			SpeedCategory: "vakra", Vedha: "left",
+			SpeedCategory: "vakra", Vedha: "left", VedhaTarget: "Abhijit",
 			Sign: "Leo", NakshatraName: "Purva Phalguni", NakshatraPada: 2,
 			IsRetro: true, SignLord: "Sun", SignLordship: "Enemy",
 		},
@@ -304,6 +305,8 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 				"%s: SpeedCategory expected %s, got %s", name, expected.SpeedCategory, planet.Cords.SpeedCategory)
 			assert.Equal(t, expected.Vedha, planet.Cords.Vedha,
 				"%s: Vedha expected %s, got %s", name, expected.Vedha, planet.Cords.Vedha)
+			assert.Equal(t, expected.VedhaTarget, planet.Cords.VedhaTarget,
+				"%s: VedhaTarget expected %s, got %s", name, expected.VedhaTarget, planet.Cords.VedhaTarget)
 			assert.Equal(t, expected.Sign, planet.Cords.Sign,
 				"%s: Sign expected %s, got %s", name, expected.Sign, planet.Cords.Sign)
 			assert.Equal(t, expected.NakshatraName, planet.Cords.Nakshatra.Name,
