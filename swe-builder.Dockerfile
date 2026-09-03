@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:3.24
+FROM docker.io/library/alpine:3.24@sha256:79ff19e9084a00eece421b2523fb93e22d730e2c0e525905de047e848e56d95f
 
 # libswe ABI must match swephgo's vendored 2.10.03 headers.
 ARG SWISSEPH_REF=v2.10.03
