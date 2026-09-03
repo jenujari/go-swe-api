@@ -40,7 +40,6 @@ func (s *Server) GetPos(ctx context.Context, req *pb.PosRequest) (*pb.PosRespons
 			if err != nil {
 				return nil, err
 			}
-			planetCord.CalculateDerivedValues()
 			results[planet] = mapToProtoPlanetCord(planetCord)
 		}
 	} else {
@@ -48,7 +47,6 @@ func (s *Server) GetPos(ctx context.Context, req *pb.PosRequest) (*pb.PosRespons
 		if err != nil {
 			return nil, err
 		}
-		planetCord.CalculateDerivedValues()
 		results[req.PlanetName] = mapToProtoPlanetCord(planetCord)
 	}
 

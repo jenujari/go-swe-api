@@ -88,7 +88,6 @@ func CalcTithy(timestamp time.Time) (int32, string, string, error) {
 	tithy := baselib.CalcTithy(moonCord.Longitude, sunCord.Longitude)
 	weekDay = timestamp.Weekday().String()
 
-	moonCord.CalculateDerivedValues()
 	nakshatra = moonCord.Nakshatra.Name
 
 	return int32(tithy), weekDay, nakshatra, nil
@@ -228,6 +227,8 @@ func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
 	return time.Date(y, time.Month(m), d, hours, minutes, seconds, 0, time.UTC), nil
 }
 
+// GetPlanetCalculation returns a full PlanetCord for planet at siderealTime:
+// raw ephemeris plus derived Vedic fields (vedha, nakshatra, sign lord, navamsa).
 func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetCord, error) {
 	var xp = make([]float64, 6)
 	var serr = make([]byte, 1000)
@@ -270,6 +271,7 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 	planetCord.SpeedLat = xp[4]
 	planetCord.SpeedDist = xp[5]
 	planetCord.Name = planet
+	planetCord.CalculateDerivedValues()
 
 	return planetCord, nil
 }
@@ -278,8 +280,6 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 // the assembled PlanetBalas struct. sunLong is required because UdayBal is
 // relative to the Sun's longitude.
 func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet string) (PlanetBalas, error) {
-	cords.CalculateDerivedValues()
-
 	kshetraBala, err := bal.KshetraBal(cords.Longitude, planet)
 	if err != nil {
 		return PlanetBalas{}, fmt.Errorf("%s: KshetraBal: %w", planet, err)

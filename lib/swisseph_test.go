@@ -58,34 +58,58 @@ func Test_GetPlanetCalculation(T *testing.T) {
 	t1 := time.Date(2026, 1, 14, 13, 45, 30, 0, time.UTC)
 
 	table := map[string]struct {
-		expected baselib.PlanetCord
+		Longitude     float64
+		Latitude      float64
+		Vedha         string
+		VedhaTarget   string
+		Sign          string
+		NakshatraName string
+		SpeedCategory string
 	}{
 		"Moon": {
-			expected: baselib.PlanetCord{Longitude: 222.80, Latitude: -5.11},
+			Longitude: 222.80, Latitude: -5.11,
+			Vedha: "front", VedhaTarget: "Ashlesha",
+			Sign: "Scorpio", NakshatraName: "Anuradha", SpeedCategory: "ati-mand",
 		},
 		"Sun": {
-			expected: baselib.PlanetCord{Longitude: 270.17, Latitude: 0.00},
+			Longitude: 270.17, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Mercury": {
-			expected: baselib.PlanetCord{Longitude: 265.71, Latitude: -1.76},
+			Longitude: 265.71, Latitude: -1.76,
+			Vedha: "front", VedhaTarget: "Ardra",
+			Sign: "Sagittarius", NakshatraName: "Purva Ashadha", SpeedCategory: "sheeghra",
 		},
 		"Mars": {
-			expected: baselib.PlanetCord{Longitude: 268.92, Latitude: -0.97},
+			Longitude: 268.92, Latitude: -0.97,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Sagittarius", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Venus": {
-			expected: baselib.PlanetCord{Longitude: 272.05, Latitude: -0.97},
+			Longitude: 272.05, Latitude: -0.97,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Jupiter": {
-			expected: baselib.PlanetCord{Longitude: 85.31, Latitude: 0.27},
+			Longitude: 85.31, Latitude: 0.27,
+			Vedha: "right", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Gemini", NakshatraName: "Punarvasu", SpeedCategory: "kutil",
 		},
 		"Saturn": {
-			expected: baselib.PlanetCord{Longitude: 332.87, Latitude: -2.22},
+			Longitude: 332.87, Latitude: -2.22,
+			Vedha: "front", VedhaTarget: "Chitra",
+			Sign: "Pisces", NakshatraName: "Purva Bhadrapada", SpeedCategory: "sama",
 		},
 		"Rahu": {
-			expected: baselib.PlanetCord{Longitude: 317.22, Latitude: 0.00},
+			Longitude: 317.22, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Pushya",
+			Sign: "Aquarius", NakshatraName: "Shatabhisha", SpeedCategory: "vakra",
 		},
 		"Ketu": {
-			expected: baselib.PlanetCord{Longitude: 137.22, Latitude: 0.00},
+			Longitude: 137.22, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Abhijit",
+			Sign: "Leo", NakshatraName: "Purva Phalguni", SpeedCategory: "vakra",
 		},
 	}
 
@@ -100,8 +124,13 @@ func Test_GetPlanetCalculation(T *testing.T) {
 		assert.NoError(T, err, "%s: Expected no error, got %v", name, err)
 		assert.NotNil(T, result, "%s: Expected non-nil result, got nil", name)
 
-		assert.InDelta(T, tc.expected.Longitude, result.Longitude, 0.01, "%s: Expected Longitude %f, got %f", name, tc.expected.Longitude, result.Longitude)
-		assert.InDelta(T, tc.expected.Latitude, result.Latitude, 0.01, "%s: Expected Latitude %f, got %f", name, tc.expected.Latitude, result.Latitude)
+		assert.InDelta(T, tc.Longitude, result.Longitude, 0.01, "%s: Expected Longitude %f, got %f", name, tc.Longitude, result.Longitude)
+		assert.InDelta(T, tc.Latitude, result.Latitude, 0.01, "%s: Expected Latitude %f, got %f", name, tc.Latitude, result.Latitude)
+		assert.Equal(T, tc.Vedha, result.Vedha, "%s: Vedha expected %s, got %s", name, tc.Vedha, result.Vedha)
+		assert.Equal(T, tc.VedhaTarget, result.VedhaTarget, "%s: VedhaTarget expected %s, got %s", name, tc.VedhaTarget, result.VedhaTarget)
+		assert.Equal(T, tc.Sign, result.Sign, "%s: Sign expected %s, got %s", name, tc.Sign, result.Sign)
+		assert.Equal(T, tc.NakshatraName, result.Nakshatra.Name, "%s: Nakshatra expected %s, got %s", name, tc.NakshatraName, result.Nakshatra.Name)
+		assert.Equal(T, tc.SpeedCategory, result.SpeedCategory, "%s: SpeedCategory expected %s, got %s", name, tc.SpeedCategory, result.SpeedCategory)
 	}
 }
 
