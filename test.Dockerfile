@@ -12,11 +12,11 @@ ENV CGO_ENABLED=1
 ENV LD_LIBRARY_PATH=/usr/local/lib
 ENV CGO_LDFLAGS="-L/usr/local/lib -Wl,-rpath,/usr/local/lib"
 
-WORKDIR /test_sweisseph
+WORKDIR /src
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-ENTRYPOINT ["go", "test", "./...", "-v"]
+ENTRYPOINT ["go", "test"]
