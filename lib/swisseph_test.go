@@ -32,7 +32,7 @@ func Test_LongDiff(T *testing.T) {
 	t1 := time.Date(2026, 1, 21, 13, 0, 0, 0, time.UTC)
 	jd, _ := UTCToSiderealTime(t1)
 
-	diff, err := LongDiff(jd, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
+	diff, err := LongDiff(jd, "Sun", "Mercury")
 	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.InDelta(T, 0.0770, diff, 0.0001, "Expected %f, got %f", 0.0770, diff)
 }
@@ -43,12 +43,16 @@ func Test_FindConjunctionRange(T *testing.T) {
 	expectedStartT := time.Date(2026, 1, 20, 4, 0, 0, 0, time.UTC)
 	expectedEndT := time.Date(2026, 1, 23, 3, 0, 0, 0, time.UTC)
 
-	startT, endT, inConj, err := FindConjunctionRange(t1, t2, 1, 1.0/24.0, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
+	startT, endT, inConj, err := FindConjunctionRange(t1, t2, 1, 1.0/24.0, "Sun", "Mercury")
 
 	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.True(T, inConj, "Expected conjunction to be found")
 	assert.Equal(T, expectedStartT, startT, "Expected start time %v, got %v", expectedStartT, startT)
 	assert.Equal(T, expectedEndT, endT, "Expected end time %v, got %v", expectedEndT, endT)
+
+	_, _, _, err = FindConjunctionRange(t1, t2, 1, 1.0/24.0, "Sun", "NotAPlanet")
+	assert.Error(T, err)
+	assert.Contains(T, err.Error(), "unknown planet")
 }
 
 func Test_GetPlanetCalculation(T *testing.T) {
@@ -58,34 +62,58 @@ func Test_GetPlanetCalculation(T *testing.T) {
 	t1 := time.Date(2026, 1, 14, 13, 45, 30, 0, time.UTC)
 
 	table := map[string]struct {
-		expected baselib.PlanetCord
+		Longitude     float64
+		Latitude      float64
+		Vedha         string
+		VedhaTarget   string
+		Sign          string
+		NakshatraName string
+		SpeedCategory string
 	}{
 		"Moon": {
-			expected: baselib.PlanetCord{Longitude: 222.80, Latitude: -5.11},
+			Longitude: 222.80, Latitude: -5.11,
+			Vedha: "front", VedhaTarget: "Ashlesha",
+			Sign: "Scorpio", NakshatraName: "Anuradha", SpeedCategory: "ati-mand",
 		},
 		"Sun": {
-			expected: baselib.PlanetCord{Longitude: 270.17, Latitude: 0.00},
+			Longitude: 270.17, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Mercury": {
-			expected: baselib.PlanetCord{Longitude: 265.71, Latitude: -1.76},
+			Longitude: 265.71, Latitude: -1.76,
+			Vedha: "front", VedhaTarget: "Ardra",
+			Sign: "Sagittarius", NakshatraName: "Purva Ashadha", SpeedCategory: "sheeghra",
 		},
 		"Mars": {
-			expected: baselib.PlanetCord{Longitude: 268.92, Latitude: -0.97},
+			Longitude: 268.92, Latitude: -0.97,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Sagittarius", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Venus": {
-			expected: baselib.PlanetCord{Longitude: 272.05, Latitude: -0.97},
+			Longitude: 272.05, Latitude: -0.97,
+			Vedha: "left", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", SpeedCategory: "ati-sheeghra",
 		},
 		"Jupiter": {
-			expected: baselib.PlanetCord{Longitude: 85.31, Latitude: 0.27},
+			Longitude: 85.31, Latitude: 0.27,
+			Vedha: "right", VedhaTarget: "Purva Bhadrapada",
+			Sign: "Gemini", NakshatraName: "Punarvasu", SpeedCategory: "kutil",
 		},
 		"Saturn": {
-			expected: baselib.PlanetCord{Longitude: 332.87, Latitude: -2.22},
+			Longitude: 332.87, Latitude: -2.22,
+			Vedha: "front", VedhaTarget: "Chitra",
+			Sign: "Pisces", NakshatraName: "Purva Bhadrapada", SpeedCategory: "sama",
 		},
 		"Rahu": {
-			expected: baselib.PlanetCord{Longitude: 317.22, Latitude: 0.00},
+			Longitude: 317.22, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Pushya",
+			Sign: "Aquarius", NakshatraName: "Shatabhisha", SpeedCategory: "vakra",
 		},
 		"Ketu": {
-			expected: baselib.PlanetCord{Longitude: 137.22, Latitude: 0.00},
+			Longitude: 137.22, Latitude: 0.00,
+			Vedha: "left", VedhaTarget: "Abhijit",
+			Sign: "Leo", NakshatraName: "Purva Phalguni", SpeedCategory: "vakra",
 		},
 	}
 
@@ -100,9 +128,29 @@ func Test_GetPlanetCalculation(T *testing.T) {
 		assert.NoError(T, err, "%s: Expected no error, got %v", name, err)
 		assert.NotNil(T, result, "%s: Expected non-nil result, got nil", name)
 
-		assert.InDelta(T, tc.expected.Longitude, result.Longitude, 0.01, "%s: Expected Longitude %f, got %f", name, tc.expected.Longitude, result.Longitude)
-		assert.InDelta(T, tc.expected.Latitude, result.Latitude, 0.01, "%s: Expected Latitude %f, got %f", name, tc.expected.Latitude, result.Latitude)
+		assert.InDelta(T, tc.Longitude, result.Longitude, 0.01, "%s: Expected Longitude %f, got %f", name, tc.Longitude, result.Longitude)
+		assert.InDelta(T, tc.Latitude, result.Latitude, 0.01, "%s: Expected Latitude %f, got %f", name, tc.Latitude, result.Latitude)
+		assert.Equal(T, tc.Vedha, result.Vedha, "%s: Vedha expected %s, got %s", name, tc.Vedha, result.Vedha)
+		assert.Equal(T, tc.VedhaTarget, result.VedhaTarget, "%s: VedhaTarget expected %s, got %s", name, tc.VedhaTarget, result.VedhaTarget)
+		assert.Equal(T, tc.Sign, result.Sign, "%s: Sign expected %s, got %s", name, tc.Sign, result.Sign)
+		assert.Equal(T, tc.NakshatraName, result.Nakshatra.Name, "%s: Nakshatra expected %s, got %s", name, tc.NakshatraName, result.Nakshatra.Name)
+		assert.Equal(T, tc.SpeedCategory, result.SpeedCategory, "%s: SpeedCategory expected %s, got %s", name, tc.SpeedCategory, result.SpeedCategory)
 	}
+}
+
+func Test_GetPlanetCalculation_Jan26Sun(T *testing.T) {
+	defer SweClear()
+
+	t1 := time.Date(2026, 1, 26, 0, 0, 0, 0, time.UTC)
+	siderealTime, err := UTCToSiderealTime(t1)
+	assert.NoError(T, err)
+
+	sun, err := GetPlanetCalculation(siderealTime, "Sun")
+	assert.NoError(T, err)
+	assert.InDelta(T, 281.808299, sun.Longitude, 0.001)
+	assert.Equal(T, "left", sun.Vedha)
+	assert.Equal(T, "Shravana", sun.Nakshatra.Name)
+	assert.Equal(T, "Dhanishtha", sun.VedhaTarget)
 }
 
 func Test_CalcTithy(T *testing.T) {
@@ -174,6 +222,8 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 		IsRetro       bool
 		SignLord      string
 		SignLordship  string
+		NavamsaSign   string
+		Vargottama    bool
 	}
 
 	table := map[string]expectedBala{
@@ -185,6 +235,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", NakshatraPada: 2,
 			IsRetro: false, SignLord: "Saturn", SignLordship: "Enemy",
+			NavamsaSign: "Capricorn", Vargottama: true,
 		},
 		"Moon": {
 			UdayBala: 21.054089, UchchaBala: 50.365213, VakraBala: 0.000000,
@@ -194,6 +245,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "ati-mand", Vedha: "front", VedhaTarget: "Ashlesha",
 			Sign: "Scorpio", NakshatraName: "Anuradha", NakshatraPada: 3,
 			IsRetro: false, SignLord: "Mars", SignLordship: "Neutral",
+			NavamsaSign: "Libra", Vargottama: false,
 		},
 		"Mercury": {
 			UdayBala: 0.000000, UchchaBala: 70.350375, VakraBala: 0.000000,
@@ -203,6 +255,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "sheeghra", Vedha: "front", VedhaTarget: "Ardra",
 			Sign: "Sagittarius", NakshatraName: "Purva Ashadha", NakshatraPada: 4,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Neutral",
+			NavamsaSign: "Scorpio", Vargottama: false,
 		},
 		"Venus": {
 			UdayBala: 0.000000, UchchaBala: 77.204950, VakraBala: 0.000000,
@@ -212,6 +265,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Capricorn", NakshatraName: "Uttara Ashadha", NakshatraPada: 3,
 			IsRetro: false, SignLord: "Saturn", SignLordship: "Friend",
+			NavamsaSign: "Capricorn", Vargottama: true,
 		},
 		"Mars": {
 			UdayBala: 0.000000, UchchaBala: 96.850147, VakraBala: 0.000000,
@@ -221,6 +275,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "ati-sheeghra", Vedha: "left", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Sagittarius", NakshatraName: "Uttara Ashadha", NakshatraPada: 1,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Friend",
+			NavamsaSign: "Sagittarius", Vargottama: true,
 		},
 		"Jupiter": {
 			UdayBala: 97.125283, UchchaBala: 99.643918, VakraBala: 98.124219,
@@ -230,6 +285,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "kutil", Vedha: "right", VedhaTarget: "Purva Bhadrapada",
 			Sign: "Gemini", NakshatraName: "Punarvasu", NakshatraPada: 2,
 			IsRetro: true, SignLord: "Mercury", SignLordship: "Enemy",
+			NavamsaSign: "Taurus", Vargottama: false,
 		},
 		"Saturn": {
 			UdayBala: 28.906611, UchchaBala: 92.009166, VakraBala: 0.000000,
@@ -239,6 +295,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "sama", Vedha: "front", VedhaTarget: "Chitra",
 			Sign: "Pisces", NakshatraName: "Purva Bhadrapada", NakshatraPada: 4,
 			IsRetro: false, SignLord: "Jupiter", SignLordship: "Neutral",
+			NavamsaSign: "Cancer", Vargottama: false,
 		},
 		"Rahu": {
 			UdayBala: 0.000000, UchchaBala: 61.468149, VakraBala: 100.000000,
@@ -248,6 +305,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "vakra", Vedha: "left", VedhaTarget: "Pushya",
 			Sign: "Aquarius", NakshatraName: "Shatabhisha", NakshatraPada: 4,
 			IsRetro: true, SignLord: "Saturn", SignLordship: "Enemy",
+			NavamsaSign: "Pisces", Vargottama: false,
 		},
 		"Ketu": {
 			UdayBala: 0.000000, UchchaBala: 61.468149, VakraBala: 100.000000,
@@ -257,6 +315,7 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 			SpeedCategory: "vakra", Vedha: "left", VedhaTarget: "Abhijit",
 			Sign: "Leo", NakshatraName: "Purva Phalguni", NakshatraPada: 2,
 			IsRetro: true, SignLord: "Sun", SignLordship: "Enemy",
+			NavamsaSign: "Virgo", Vargottama: false,
 		},
 	}
 
@@ -319,6 +378,10 @@ func Test_GetAllPlanetsBalas(T *testing.T) {
 				"%s: SignLord expected %s, got %s", name, expected.SignLord, planet.Cords.SignLord)
 			assert.Equal(t, expected.SignLordship, planet.Cords.SignLordship,
 				"%s: SignLordship expected %s, got %s", name, expected.SignLordship, planet.Cords.SignLordship)
+			assert.Equal(t, expected.NavamsaSign, planet.Cords.NavamsaSign,
+				"%s: NavamsaSign expected %s, got %s", name, expected.NavamsaSign, planet.Cords.NavamsaSign)
+			assert.Equal(t, expected.Vargottama, planet.Cords.Vargottama,
+				"%s: Vargottama expected %v, got %v", name, expected.Vargottama, planet.Cords.Vargottama)
 
 			// -- DMS fields should be populated (non-zero struct) --
 			emptyDMS := baselib.DMS{}

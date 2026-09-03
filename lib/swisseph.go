@@ -88,15 +88,42 @@ func CalcTithy(timestamp time.Time) (int32, string, string, error) {
 	tithy := baselib.CalcTithy(moonCord.Longitude, sunCord.Longitude)
 	weekDay = timestamp.Weekday().String()
 
-	moonCord.CalculateDerivedValues()
 	nakshatra = moonCord.Nakshatra.Name
 
 	return int32(tithy), weekDay, nakshatra, nil
 
 }
 
-func LongDiff(jd float64, p1, p2 int) (float64, error) {
+func planetID(name string) (int, error) {
+	id, ok := baselib.PLANET_LIB_MAP[name]
+	if !ok {
+		return 0, fmt.Errorf("unknown planet: %s", name)
+	}
+	return id, nil
+}
 
+// PlanetNames returns the planet names the ephemeris module can calculate.
+func PlanetNames() []string {
+	names := make([]string, 0, len(baselib.PLANET_LIB_MAP))
+	for name := range baselib.PLANET_LIB_MAP {
+		names = append(names, name)
+	}
+	return names
+}
+
+func LongDiff(jd float64, p1, p2 string) (float64, error) {
+	id1, err := planetID(p1)
+	if err != nil {
+		return 0, err
+	}
+	id2, err := planetID(p2)
+	if err != nil {
+		return 0, err
+	}
+	return longDiffIDs(jd, id1, id2)
+}
+
+func longDiffIDs(jd float64, p1, p2 int) (float64, error) {
 	var a = make([]float64, 6)
 	var b = make([]float64, 6)
 	var serr1 = make([]byte, 1000)
@@ -128,7 +155,16 @@ func LongDiff(jd float64, p1, p2 int) (float64, error) {
 	return d, nil
 }
 
-func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float64, p1, p2 int) (time.Time, time.Time, bool, error) {
+func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float64, p1, p2 string) (time.Time, time.Time, bool, error) {
+	id1, err := planetID(p1)
+	if err != nil {
+		return time.Time{}, time.Time{}, false, err
+	}
+	id2, err := planetID(p2)
+	if err != nil {
+		return time.Time{}, time.Time{}, false, err
+	}
+
 	inConj := false
 	var startJD, endJD float64
 	var emptyTime time.Time
@@ -137,7 +173,7 @@ func FindConjunctionRange(startTime, endTime time.Time, conjDeg, stepDays float6
 	jdEnd, _ := UTCToSiderealTime(endTime)
 
 	for jd := jdStart; jd <= jdEnd; jd += stepDays {
-		diff, er := LongDiff(jd, p1, p2)
+		diff, er := longDiffIDs(jd, id1, id2)
 		if er != nil {
 			return emptyTime, emptyTime, false, er
 		}
@@ -228,6 +264,8 @@ func SiderealTimeToUTC(siderealTime float64) (time.Time, error) {
 	return time.Date(y, time.Month(m), d, hours, minutes, seconds, 0, time.UTC), nil
 }
 
+// GetPlanetCalculation returns a full PlanetCord for planet at siderealTime:
+// raw ephemeris plus derived Vedic fields (vedha, nakshatra, sign lord, navamsa).
 func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetCord, error) {
 	var xp = make([]float64, 6)
 	var serr = make([]byte, 1000)
@@ -237,7 +275,10 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 		isKetu = true
 	}
 
-	libPlanet := baselib.PLANET_LIB_MAP[planet]
+	libPlanet, err := planetID(planet)
+	if err != nil {
+		return nil, err
+	}
 
 	setSidMode()
 	ret := swelib.CalcUt(siderealTime, libPlanet, int(iFlag), xp, serr)
@@ -270,6 +311,7 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 	planetCord.SpeedLat = xp[4]
 	planetCord.SpeedDist = xp[5]
 	planetCord.Name = planet
+	planetCord.CalculateDerivedValues()
 
 	return planetCord, nil
 }
@@ -278,8 +320,6 @@ func GetPlanetCalculation(siderealTime float64, planet string) (*baselib.PlanetC
 // the assembled PlanetBalas struct. sunLong is required because UdayBal is
 // relative to the Sun's longitude.
 func computePlanetBalas(sunLong float64, cords *baselib.PlanetCord, planet string) (PlanetBalas, error) {
-	cords.CalculateDerivedValues()
-
 	kshetraBala, err := bal.KshetraBal(cords.Longitude, planet)
 	if err != nil {
 		return PlanetBalas{}, fmt.Errorf("%s: KshetraBal: %w", planet, err)
