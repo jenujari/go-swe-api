@@ -54,8 +54,8 @@ pipeline {
                         "go test ./... -v -coverpkg=./... -coverprofile=coverage.out \
                         && grep -v '\\.pb\\.go' coverage.out > cov.tmp \
                         && mv cov.tmp coverage.out \
-                        && go tool cover -func=coverage.out | tee coverage-summary.txt" \
-                        && go tool cover -html=coverage.out -o coverage.html
+                        && go tool cover -func=coverage.out | tee coverage-summary.txt \
+                        && go tool cover -html=coverage.out -o coverage.html"
                 '''
             }
         }
