@@ -11,6 +11,9 @@ WORKDIR /swisseph
 RUN apk add --no-cache build-base git \
     && git clone --depth 1 --branch "${SWISSEPH_REF}" https://github.com/aloistr/swisseph.git . \
     && make libswe.so \
+    && gcc -shared -Wl,-soname,libswe.so -o libswe.so \
+        swedate.o swehouse.o swejpl.o swemmoon.o swemplan.o sweph.o swephlib.o swecl.o swehel.o \
+        -lm -ldl \
     && install -Dm755 libswe.so /usr/local/lib/libswe.so \
     && git init /tmp/swe-ephe \
     && git -C /tmp/swe-ephe remote add origin https://github.com/aloistr/swisseph.git \

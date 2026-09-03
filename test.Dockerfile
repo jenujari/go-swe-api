@@ -8,6 +8,7 @@ COPY --from=docker.io/jhon5456/sweph-build-base:v2.10.03 /usr/local/lib/ephe /us
 ENV SWISSEPH_PATH=/usr/local/lib/ephe
 ENV CGO_ENABLED=1
 ENV LD_LIBRARY_PATH=/usr/local/lib
+ENV CGO_LDFLAGS="-L/usr/local/lib -Wl,-rpath,/usr/local/lib"
 
 WORKDIR /test_sweisseph
 
