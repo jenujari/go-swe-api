@@ -6,7 +6,6 @@ import (
 
 	lib "github.com/jenujari/go-swe-api/lib"
 	pb "github.com/jenujari/go-swe-api/proto"
-	baselib "github.com/jenujari/planets-lib"
 )
 
 type Server struct {
@@ -126,61 +125,6 @@ func (s *Server) GetBalas(ctx context.Context, req *pb.BalasRequest) (*pb.BalasR
 		return nil, err
 	}
 
-	results := make(map[string]*pb.PlanetBalas)
-	for name, pbBalas := range balasMap {
-		results[name] = &pb.PlanetBalas{
-			Cords:        mapToProtoPlanetCord(pbBalas.Cords),
-			UdayBala:     pbBalas.UdayBala,
-			UchchaBala:   pbBalas.UchchaBala,
-			VakraBala:    pbBalas.VakraBala,
-			KshetraBala:  pbBalas.KshetraBala,
-			NavamshaBala: pbBalas.NavamshaBala,
-		}
-	}
-
-	return &pb.BalasResponse{Results: results}, nil
-}
-
-func mapToProtoPlanetCord(pc *baselib.PlanetCord) *pb.PlanetCord {
-	return &pb.PlanetCord{
-		Name:          pc.Name,
-		Longitude:     pc.Longitude,
-		Latitude:      pc.Latitude,
-		Distance:      pc.Distance,
-		SpeedLong:     pc.SpeedLong,
-		SpeedLat:      pc.SpeedLat,
-		SpeedDist:     pc.SpeedDist,
-		SpeedCategory: pc.SpeedCategory,
-		Vedha:         pc.Vedha,
-		LongitudeDms: &pb.DMS{
-			IsNegative: pc.LongitudeDMS.IsNegative,
-			D:          int32(pc.LongitudeDMS.D),
-			M:          int32(pc.LongitudeDMS.M),
-			S:          pc.LongitudeDMS.S,
-		},
-		LatitudeDms: &pb.DMS{
-			IsNegative: pc.LatitudeDMS.IsNegative,
-			D:          int32(pc.LatitudeDMS.D),
-			M:          int32(pc.LatitudeDMS.M),
-			S:          pc.LatitudeDMS.S,
-		},
-		SpeedLongDms: &pb.DMS{
-			IsNegative: pc.SpeedLongDMS.IsNegative,
-			D:          int32(pc.SpeedLongDMS.D),
-			M:          int32(pc.SpeedLongDMS.M),
-			S:          pc.SpeedLongDMS.S,
-		},
-		Sign: pc.Sign,
-		Nakshatra: &pb.NakshatraPada{
-			Name: pc.Nakshatra.Name,
-			Pada: int32(pc.Nakshatra.Pada),
-		},
-		IsRetro:      pc.IsRetro,
-		SignLord:     pc.SignLord,
-		SignLordship: pc.SignLordship,
-		NavamsaSign:  pc.NavamsaSign,
-		Vargottama:   pc.Vargottama,
-		VedhaTarget:  pc.VedhaTarget,
-	}
+	return &pb.BalasResponse{Results: mapToProtoPlanetBalasMap(balasMap)}, nil
 }
 
