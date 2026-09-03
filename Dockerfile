@@ -17,7 +17,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o sweAPI main.go
+RUN go build -o sweAPI main.go \
+    && ldd sweAPI
 
 FROM dhi.io/alpine-base:3.24
 
@@ -32,4 +33,4 @@ COPY --from=builder /app/sweAPI ./
 COPY config/conf.yml config/conf.yml
 
 EXPOSE 5678
-ENTRYPOINT ["./sweAPI"]
+ENTRYPOINT ["/app/sweAPI"]
