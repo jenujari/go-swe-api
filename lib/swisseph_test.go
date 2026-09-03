@@ -32,7 +32,7 @@ func Test_LongDiff(T *testing.T) {
 	t1 := time.Date(2026, 1, 21, 13, 0, 0, 0, time.UTC)
 	jd, _ := UTCToSiderealTime(t1)
 
-	diff, err := LongDiff(jd, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
+	diff, err := LongDiff(jd, "Sun", "Mercury")
 	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.InDelta(T, 0.0770, diff, 0.0001, "Expected %f, got %f", 0.0770, diff)
 }
@@ -43,12 +43,16 @@ func Test_FindConjunctionRange(T *testing.T) {
 	expectedStartT := time.Date(2026, 1, 20, 4, 0, 0, 0, time.UTC)
 	expectedEndT := time.Date(2026, 1, 23, 3, 0, 0, 0, time.UTC)
 
-	startT, endT, inConj, err := FindConjunctionRange(t1, t2, 1, 1.0/24.0, baselib.PLANET_LIB_MAP["Sun"], baselib.PLANET_LIB_MAP["Mercury"])
+	startT, endT, inConj, err := FindConjunctionRange(t1, t2, 1, 1.0/24.0, "Sun", "Mercury")
 
 	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.True(T, inConj, "Expected conjunction to be found")
 	assert.Equal(T, expectedStartT, startT, "Expected start time %v, got %v", expectedStartT, startT)
 	assert.Equal(T, expectedEndT, endT, "Expected end time %v, got %v", expectedEndT, endT)
+
+	_, _, _, err = FindConjunctionRange(t1, t2, 1, 1.0/24.0, "Sun", "NotAPlanet")
+	assert.Error(T, err)
+	assert.Contains(T, err.Error(), "unknown planet")
 }
 
 func Test_GetPlanetCalculation(T *testing.T) {

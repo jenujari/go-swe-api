@@ -35,7 +35,7 @@ func (s *Server) GetPos(ctx context.Context, req *pb.PosRequest) (*pb.PosRespons
 	results := make(map[string]*pb.PlanetCord)
 
 	if req.PlanetName == "" {
-		for planet := range baselib.PLANET_LIB_MAP {
+		for _, planet := range lib.PlanetNames() {
 			planetCord, err := lib.GetPlanetCalculation(siderealTime, planet)
 			if err != nil {
 				return nil, err
@@ -79,8 +79,8 @@ func (s *Server) FindConjunction(ctx context.Context, req *pb.ConjunctionRequest
 		endTime,
 		orb,
 		step,
-		baselib.PLANET_LIB_MAP[req.Planet1],
-		baselib.PLANET_LIB_MAP[req.Planet2],
+		req.Planet1,
+		req.Planet2,
 	)
 
 	if err != nil {
