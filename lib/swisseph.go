@@ -67,7 +67,10 @@ func SweClear() {
 func CalcTithy(timestamp time.Time) (int32, string, string, error) {
 	var weekDay, nakshatra string
 
-	sidTime, err := UTCToSiderealTime(timestamp)
+	// Tithi is taken at 06:30 IST on the civil date of timestamp.
+	instant := baselib.TithyInstant(timestamp)
+
+	sidTime, err := UTCToSiderealTime(instant)
 
 	if err != nil {
 		return 0, weekDay, nakshatra, err
@@ -86,7 +89,7 @@ func CalcTithy(timestamp time.Time) (int32, string, string, error) {
 	}
 
 	tithy := baselib.CalcTithy(moonCord.Longitude, sunCord.Longitude)
-	weekDay = timestamp.Weekday().String()
+	weekDay = instant.Weekday().String()
 
 	nakshatra = moonCord.Nakshatra.Name
 

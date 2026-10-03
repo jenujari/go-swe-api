@@ -8,7 +8,7 @@ tool (
 )
 
 require (
-	github.com/jenujari/planets-lib v1.2.0
+	github.com/jenujari/planets-lib v1.2.1
 	github.com/jenujari/runtime-context v0.0.0-20260723191314-87c5acafbf42
 	github.com/mshafiee/swephgo v1.1.0
 	github.com/spf13/viper v1.21.0
