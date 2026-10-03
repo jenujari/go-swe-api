@@ -159,18 +159,22 @@ func Test_CalcTithy(T *testing.T) {
 	w1 := "Wednesday"
 	n1 := "Anuradha"
 	w2 := "Friday"
-	n2 := "Chitra"
 
-	// Based on the same reference timestamp used in Test_GetPlanetCalculation:
-	// Moon ~= 222.80, Sun ~= 270.17 => delta ~= 312.63 => floor(312.63/12)+1 = 27
+	// Clock is ignored: both cases are evaluated at 06:30 IST on that civil date.
 	t1 := time.Date(2026, 1, 14, 13, 45, 30, 0, time.UTC)
 
 	tithy, w, n, err := CalcTithy(t1)
 
 	assert.NoError(T, err, "Expected no error, got %v", err)
-	assert.Equal(T, int32(27), tithy, "Expected Tithy %d, got %d", 27, tithy)
+	assert.Equal(T, int32(26), tithy, "Expected Tithy %d, got %d", 26, tithy)
 	assert.Equal(T, w1, w, "Expected Weekday %s, got %s", w1, w)
 	assert.Equal(T, n1, n, "Expected Nakshatra %s, got %s", n1, n)
+
+	sameDay, wSame, nSame, err := CalcTithy(time.Date(2026, 1, 14, 22, 0, 0, 0, time.UTC))
+	assert.NoError(T, err)
+	assert.Equal(T, tithy, sameDay)
+	assert.Equal(T, w, wSame)
+	assert.Equal(T, n, nSame)
 
 	t2 := time.Date(2026, 3, 6, 6, 0, 0, 0, time.UTC)
 
@@ -179,7 +183,7 @@ func Test_CalcTithy(T *testing.T) {
 	assert.NoError(T, err, "Expected no error, got %v", err)
 	assert.Equal(T, int32(18), tithy, "Expected Tithy %d, got %d", 18, tithy)
 	assert.Equal(T, w2, w, "Expected Weekday %s, got %s", w2, w)
-	assert.Equal(T, n2, n, "Expected Nakshatra %s, got %s", n2, n)
+	assert.Equal(T, "Hasta", n, "Expected Nakshatra %s, got %s", "Hasta", n)
 }
 
 func Test_GetAllPlanetsBalas(T *testing.T) {
